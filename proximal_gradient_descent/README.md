@@ -1,5 +1,8 @@
 # What is this this thing?? 
-The python file in this project is some rought pseudocode for proximal gradient descent. Below is a quick intuitive explanation of the method.
+The python file in this project is some rought pseudocode for proximal gradient descent. Below is a hastily written intuitive explanation of the method.
+
+
+
 
 ## Why we need Proximal Gradient Descent
 
@@ -11,7 +14,7 @@ In many real world applications, though, we don't have this luxury. A great exam
 
 The method makes use of two mathematical tools you may not have heard of already. Lets talk about them.
 
-### Sub-Gradient
+### Sub-Gradients
 * *sub-gradients* are a generalization of the concept of the gradient which can be applied to non-differentiable functions. 
 * First, let's visualize what the gradient of a convex, differentiable function looks like. These functions look like the mouth of a smiley face. The gradient of such a function is like a line which touches the curve at only one point. Note that if this is going to be true, the entire rest of the function is held above this line. Ok. That was painless. 
 * Let's go on to convex non-differentiable functions. These are like smiley mouths with at least one kink, and they have sub-gradients instead of gradients. Sub-gradients are sets of vectors. Each vector in this set is kind of like a gradient. They touch at only one point and the entire function is held above them. This means that the only element in the sub-gradient IS the gradient at all the smooth, curvey parts of our function. At the kinks, though, the sub-gradient is the set of all lines which are below the function. 
