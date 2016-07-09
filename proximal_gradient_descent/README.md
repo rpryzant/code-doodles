@@ -35,12 +35,10 @@ Formula for proximal operator courtisy of Wikipedia. Yeah yeah the notation is n
 
 ## Proximal descent
 Basically it works like this: 
+
 1. Break f into two parts: g (the differentiable part) and h (the non-differentiable part).
-
-2. Take a step along the gradient of g to minimize that part of the function
-
+2. Take a step along the gradient of g to minimize that part of the function.
 3. Use the proximal operator to take another step that reduces h while staying close to the point selected by (2)
-
 4. Repeat (2) and (3) until the optimality condition is met. 
 
 
