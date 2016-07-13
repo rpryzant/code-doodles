@@ -1,1 +1,6 @@
 Al + Fe2O4 -> Fe + Al2O3
+C5H12 + O2 -> CO2 + H2O
+Zn + HCl -> ZnCl2 + H2
+Ca(OH)2 + H3PO4 -> Ca3(PO4)2 + H2O
+FeCl3 + NH4OH -> Fe(OH)3 + NH4Cl
+K4[Fe(SCN)6] + K2Cr2O7 + H2SO4 -> Fe2(SO4)3 + Cr2(SO4)3 + CO2 + H2O + K2SO4 + KNO3
