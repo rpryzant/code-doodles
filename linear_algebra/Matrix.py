@@ -22,6 +22,9 @@ def insert_row(m, r):
 def first_nonzero_in_row(r):
     return next((i for i, x in enumerate(r) if x != 0), None)
 
+def last_nonzero_in_row(r):
+    return [i for i, x in enumerate(r) if x != 0][-1]
+
 def first_zero_in_row(r):
     return next((i for i, x in enumerate(r) if x == 0), None)
     

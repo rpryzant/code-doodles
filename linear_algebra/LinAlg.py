@@ -1,5 +1,5 @@
 import numpy as np
-from Matrix import insert_col, insert_row, first_nonzero_in_row, first_zero_in_row
+from Matrix import insert_col, insert_row, first_nonzero_in_row, first_zero_in_row, last_nonzero_in_row
 
 class LinAlg:    
 
@@ -9,21 +9,20 @@ class LinAlg:
         Given a numpy ndarray A, returns a new numpy ndarray whose columns are a basis for the nullspace of A
         """
         U, pivots = LinAlg.echelon_form(A, save_pivots = True)
+
         m, n = U.shape
         N = None
-
         pivot_columns = [p[1] for i, p in enumerate(pivots)]
         free_columns = list(set(range(n)) - set(pivot_columns))
-
         # use each free variable (/column) to make an independant nullspace vector
         for col in free_columns:
             x = np.zeros(n)
             # take 1 of this free column
             x[col] = 1
             # find the last nonzero element (it might have a bunch of 0s at the bottom since U is upper triangular)
-            starting_row = first_zero_in_row(U[:,col])
+            starting_row = last_nonzero_in_row(U[:,col])
             # work up through the free col, finding and remembering how much of the pivot cols you need to knock out each ith element
-            for i in range(starting_row)[::-1]:
+            for i in range(starting_row + 1)[::-1]:
                 pivot = next((p for p in pivots if p[0] == i), None)
                 multiplier = -U[i, col] / U[pivot]
                 U[:,col] += U[:,pivot[1]] * multiplier
@@ -42,7 +41,6 @@ class LinAlg:
         A = A.astype(float)
         current_row = 0
         pivots = []
-
         # try to find pivots in each column
         for current_col in range(n):
             # stop if you've found pivots in each row
@@ -55,7 +53,7 @@ class LinAlg:
             # do a row exchange if pivot is 0 (we know there's at least 1 nonzero below it)
             if A[current_row, current_col] == 0:
                 rest_of_column = A[current_row:, current_col] 
-                exchange_row = first_nonzero_in_row(rest_of_column)
+                exchange_row = first_nonzero_in_row(rest_of_column) + current_row
                 A[[current_row, exchange_row]] = A[[exchange_row, current_row]]
 
             # remember pivot for this column            

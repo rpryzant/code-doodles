@@ -1,26 +1,30 @@
 import sys
+import os
 import re
 import numpy as np
+# get some of my matrix operations
+sys.path.append('../../linear_algebra')
+from LinAlg import LinAlg
+from Matrix import insert_col, insert_row
 
+def attributes_from_equation(equation):
+    """
+    Takes a chemical equation and produces a mapping from elements to attribute number
+    """
+    a = re.findall('[A-Z][a-z]?', equation)
+    return list(set(a))
 
-def insert_col(m, c):
-    if m is None:
-        return c
-    else:
-        return np.c_[m, c]
-
-def insert_row(m, r):
-    if m is None:
-        return r
-    else:
-        return np.r_[m, [r]]
-
-
+def molecules_from_equation(equation):
+    """
+    Unpacks a chemical equation into a list of molecules
+    """
+    #\w == [A-Za-z0-9]
+    return re.findall('\w*\\(?\w+\\)?\w*', equation)
 
 def augment_splits(splits):
     """
     Takes the splits for a tiered molecule and undoes the parens 
-        e.g. [Ca, (, O, H, ), 2] => [Ca, O, 2, H]
+        e.g. [Ca, (, O, H, ), 2] => [Ca, O, 2, H, 2]
     """
     end_paren = splits.index(')')
     multiplyer = splits[end_paren + 1]
@@ -39,9 +43,7 @@ def molecule_to_vector(molecule, attributes, multiplyer = 1):
     v = np.zeros(len(attributes))    
     
     mol_freq_splits = re.findall('[A-Z][a-z]?|\\(|\\)|\d+', molecule)
-    # TODO FINISH PAREN PARSING
-    #if '(' in mol_freq_splits:
-    #    augment_splits(mol_freq_splits)
+
     num_splits = len(mol_freq_splits)   # len() is O(1) so this is for readability
 
     i = 0
@@ -73,19 +75,47 @@ def parse_equation(equation):
         Fe  [0  2  1  0]
          O  [0  4  0  3]
     """
-    matrix = None
-    # get element-attribute mapping
-    attributes = re.findall('[A-Z][a-z]?', equation)
-    attributes = list(set(attributes))                       # get rid of diplicates
-    molecules = re.findall('\w*\\(?\w+\\)?\w*', equation)    #\w == [A-Za-z0-9]
+    equation_matrix = None
+    attributes = attributes_from_equation(equation)
+    molecules = molecules_from_equation(equation)
 
     for m in molecules:
         v = molecule_to_vector(m, attributes)
-        matrix = insert_col(matrix, v)
-    return matrix
+        equation_matrix = insert_col(equation_matrix, v)
+    return equation_matrix
 
+
+def vector_to_equation(v, num_reactants, attributes, molecules):
+    s = ''
+    i = 0
+    while i < num_reactants:
+        print molecules[i]
+        print attributes_from_equation(molecules[i])
+        #TODO
+#        s += '%s%s' % (attributes[d])
+        i += 1
+
+
+def decode_nullspace(N, equation):
+    num_reactants = equation.split('->')[0].count('+') + 1
+    attributes = attributes_from_equation(equation)
+    molecules = molecules_from_equation(equation)
+    # if we only got 1 nullspace vector, convert it right away
+    if len(N.shape) == 1:
+        return [vector_to_equation(N, num_reactants, attributes, molecules)]
+
+    # otherwise decode each nullspace vector 
+    solutions = []
+    for nullspace_vector in N:
+        solutions.append(vector_to_equation(N, num_reactants, attributes, molecules))
+    return solutions
+            
 
 input = open(sys.argv[1]).read().split('\n')
 for equation in input:
+    M = parse_equation(equation)
+    N = LinAlg.nullspace(M)
     print equation
-    print parse_equation(equation)
+    print M
+    print N
+    print decode_nullspace(N, equation)
