@@ -52,7 +52,7 @@ class LinAlg:
             if np.all(A[current_row:,current_col] == 0):
                 continue   # continuation implies matrix is singular b/c not full rank
 
-            # do a row exchange and re-retrieve if pivot is 0 (we know there's at least 1 nonzero below it)
+            # do a row exchange if pivot is 0 (we know there's at least 1 nonzero below it)
             if A[current_row, current_col] == 0:
                 rest_of_column = A[current_row:, current_col] 
                 exchange_row = first_nonzero_in_row(rest_of_column)
