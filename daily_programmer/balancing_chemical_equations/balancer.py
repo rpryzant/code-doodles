@@ -15,6 +15,8 @@ def insert_row(m, r):
     else:
         return np.r_[m, [r]]
 
+
+
 def augment_splits(splits):
     """
     Takes the splits for a tiered molecule and undoes the parens 
