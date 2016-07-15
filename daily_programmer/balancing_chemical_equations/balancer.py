@@ -85,15 +85,38 @@ def parse_equation(equation):
     return equation_matrix
 
 
-def vector_to_equation(v, num_reactants, attributes, molecules):
-    s = ''
+def vectors_to_equations(v, equation):
+    """
+    Takes a vector of molecule multiplyers 
+    returns a series of equations, one per column of X
+    """
+    equation_splits = re.findall('\w+|->', equation)
+    v_index = 0
     i = 0
-    while i < num_reactants:
-        print molecules[i]
-        print attributes_from_equation(molecules[i])
-        #TODO
-#        s += '%s%s' % (attributes[d])
+    s = ''
+    # loop through molecules and apply the right multiplyer to each one
+    while i < len(equation_splits):
+        molecule = equation_splits[i]
+        if molecule == '->':
+            s += ' %s ' % molecule
+            i += 1
+            continue
+        j = 0
+        molecule_splits = re.findall('[A-Z][a-z]?|\d+', molecule)
+        # apply multiplyer to each element of this molecule
+        while j < len(molecule_splits):
+            element = molecule_splits[j]
+            count = '1'
+            if j < len(molecule_splits) - 1 and molecule_splits[j + 1].isdigit():
+                count = molecule_splits[j + 1]
+                j += 1
+            new_amount = round(int(count) * v[v_index], 2)
+            s += '%s%s' % (element, new_amount)
+            j += 1
+        s += ' ' 
         i += 1
+        v_index += 1
+    return s
 
 
 def decode_nullspace(N, equation):
@@ -102,12 +125,12 @@ def decode_nullspace(N, equation):
     molecules = molecules_from_equation(equation)
     # if we only got 1 nullspace vector, convert it right away
     if len(N.shape) == 1:
-        return [vector_to_equation(N, num_reactants, attributes, molecules)]
+        return [vectors_to_equations(N, equation)]
 
     # otherwise decode each nullspace vector 
     solutions = []
     for nullspace_vector in N:
-        solutions.append(vector_to_equation(N, num_reactants, attributes, molecules))
+        solutions.append(vectors_to_equations(N, equationch))
     return solutions
             
 
@@ -115,6 +138,7 @@ input = open(sys.argv[1]).read().split('\n')
 for equation in input:
     M = parse_equation(equation)
     N = LinAlg.nullspace(M)
+    # TODO - NEGATE ATTRIBUTES CORRESPONDING TO PRODUCTS
     print equation
     print M
     print N
