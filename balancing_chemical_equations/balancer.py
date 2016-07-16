@@ -3,7 +3,7 @@ import os
 import re
 import numpy as np
 # get some of my matrix operations
-sys.path.append('../../linear_algebra')
+sys.path.append('../linear_algebra')
 from LinAlg import LinAlg
 from Matrix import insert_col, insert_row
 
@@ -85,11 +85,16 @@ def parse_equation(equation):
     return equation_matrix
 
 
-def vectors_to_equations(v, equation):
+def vector_to_equation(v, equation):
     """
     Takes a vector of molecule multiplyers 
     returns a series of equations, one per column of X
     """
+    # negate reactant components of v
+    num_reactants = equation.split('->')[1].count('+') + 1
+    for i in range(num_reactants):
+        v[::-1][i] = -v[::-1][i]
+
     equation_splits = re.findall('\w+|->', equation)
     v_index = 0
     i = 0
@@ -103,6 +108,7 @@ def vectors_to_equations(v, equation):
             continue
         j = 0
         molecule_splits = re.findall('[A-Z][a-z]?|\d+', molecule)
+
         # apply multiplyer to each element of this molecule
         while j < len(molecule_splits):
             element = molecule_splits[j]
@@ -125,21 +131,27 @@ def decode_nullspace(N, equation):
     molecules = molecules_from_equation(equation)
     # if we only got 1 nullspace vector, convert it right away
     if len(N.shape) == 1:
-        return [vectors_to_equations(N, equation)]
+        return [vector_to_equation(N, equation)]
 
     # otherwise decode each nullspace vector 
     solutions = []
     for nullspace_vector in N:
-        solutions.append(vectors_to_equations(N, equationch))
+        solutions.append(vecto_to_equation(nullspace_vector, equation))
     return solutions
             
+if len(sys.argv) < 2:
+    equations = [raw_input("No input file specified. Enter equation here: ")]
+else:
+    input = open(sys.argv[1]).read()
+    equations = [x.strip() for x in input.split('\n')]
 
-input = open(sys.argv[1]).read().split('\n')
-for equation in input:
+for equation in equations:
     M = parse_equation(equation)
     N = LinAlg.nullspace(M)
-    # TODO - NEGATE ATTRIBUTES CORRESPONDING TO PRODUCTS
-    print equation
-    print M
-    print N
-    print decode_nullspace(N, equation)
+    print "working on this equation:"
+    print equation 
+    print "solutions:"
+    results = decode_nullspace(N, equation)
+    for result in results:
+        print result
+    print '\n'
