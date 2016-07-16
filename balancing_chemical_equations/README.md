@@ -31,7 +31,7 @@ This is the task that this program accomplishes.
 
 ## How does it work?
 
-Ok. Here's the fun part. There are well-known easy algorithms for balancing chemical equations that essentially cross-multiply molecules to align element frequencies, but I think my way is a little more interesting. 
+Ok. Here's the fun part. There are well-known easy algorithms for balancing chemical equations that essentially cross-multiply molecules to align element frequencies, but I think my way is a little more fun. 
 
 Begin with the observation that each molecule in an equation can be represented by a vector. Each attribute of this vector corresponds to the frequency of some element in its corresponding molecule. There is one attribute for each element that is involved in the entire reaction. For example:
 
