@@ -87,17 +87,14 @@ void delete(node *n, int d) {
     if (n -> data == d) {
 	n = n -> next;
 	return;
-    }
-    
+    }    
     while (n -> next != NULL && (n -> next) -> data != d) {
 	n = n -> next;
     }
-    
     if (n -> next == NULL) {
 	printf("No node with data %d in this list!\n", d);
 	return;
     }
-    
     node *tmp; 
     tmp = n -> next;
     n -> next = (n -> next) -> next;
@@ -109,8 +106,9 @@ void delete(node *n, int d) {
  * Prints the ll pointed to by n
  */
 void print(node *n) {
+    printf("List is displayed head first:\n");
     while (n != NULL) {
-	printf("%d\n", n -> data);
+	printf("%d  ", n -> data);
 	n = n -> next;
     }
     printf("\n");
@@ -136,7 +134,7 @@ int main() {
     int i, x, y;
     node *head = NULL;
     while (1) {
-	printf("List ops:\n");
+	printf("=========== List ops =========\n");
 	printf("\t1. insert at tail\n");
 	printf("\t2. insert at index\n");
 	printf("\t3. delete by value\n");
