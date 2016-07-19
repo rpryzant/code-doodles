@@ -1,84 +1,54 @@
 import java.util.Arrays;
+import java.lang.*;
 
-public class MinHeap {
-    
-    private int[] A;
-    private int size;
-    
+public class MinHeap<T extends Comparable<T>> extends Heap {
 
     public MinHeap() {
-	this.A = new int[100];
-	this.size = 0;
-    }
-
-    public int getSize() {
-	return this.size;
+	super();
     }
 
     public void insert(int x) {
 	if (size == A.length - 1) 
 	    doubleSize();
-	
 	A[size] = x;
 	int i = size;
 	size++;
-	int tmp;
-	while (i >= 0 && A[i] < A[parent(i)]) {
-	    System.out.println(i + "|"+ A[i] + " " + parent(i) + "|" +A[parent(i)]);
-	    tmp = A[parent(i)];
+	T tmp;
+	while (A[i].compareTo(A[parent(i)]) < 0) {
+	    tmp = (T)A[parent(i)];
 	    A[parent(i)] = A[i];
 	    A[i] = tmp;
 	    i = parent(i);
 	}
     }
 
-    public int peek() {
-	return A[0];
-    }
-
-    public int pop() {
-	int result = A[0];
-	
+    public T pop() {
 	int i = 0;
-	while (i < size) {
-	    if (A[leftChild(i)] < A[rightChild(i)]) {
-		A[i] = A[leftChild(i)];
-		i = leftChild(i);
-	    } else {
-		A[i] = A[rightChild(i)];
-		i = rightChild(i);
-	    }
+	T result = (T)peek();
+	int childIndex = i;
+
+	while (leftChild(i) < size || rightChild(i) < size) {
+	    if (leftChild(i) < size)
+		childIndex = leftChild(i);
+	    if (rightChild(i) < size && A[rightChild(i)].compareTo(A[childIndex]) < 0)
+		childIndex = rightChild(i);	    
+	    A[i] = A[childIndex];
+	    i = childIndex;
 	}
+	A[i] = null;
+	size--;
 	return result;
-    }
-
-    private int leftChild(int i) {
-	return 2 * i + 1;
-    }
-
-    private int rightChild(int i) {
-	return 2 * i + 2;
-    }
-
-    private int parent(int i) {
-	return (i - 1) / 2;
-    }
-
-    private void doubleSize() {
-	int[] n = new int[A.length * 2];
-	for (int i = 0; i < A.length; i++)
-	    n[i] = A[i];
-	A = n;
-    }
-
-    public void print() {
-	System.out.println(Arrays.toString(A));
     }
 
     public static void main(String[] args) {
 	MinHeap h = new MinHeap();
-	h.insert(1);
 	h.insert(3);
+	h.insert(1);
+	h.print();
+	h.pop();
+	h.print();
+	h.insert(1);
+	h.print();
 	h.insert(6);
 	h.insert(5);
 	h.insert(9);
