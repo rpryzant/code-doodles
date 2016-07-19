@@ -12,7 +12,7 @@ public abstract class Heap <T extends Comparable<T>>{
 	this.size = 0;
     }
 
-    abstract public void insert(int x);
+    abstract public void insert(T x);
 
     abstract public T pop();
 

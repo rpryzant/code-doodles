@@ -1,13 +1,13 @@
 import java.util.Arrays;
 import java.lang.*;
 
-public class MinHeap<T extends Comparable<T>> extends Heap {
+public class MinHeap<T extends Comparable<T>> extends Heap<T> {
 
     public MinHeap() {
 	super();
     }
 
-    public void insert(int x) {
+    public void insert(T x) {
 	if (size == A.length - 1) 
 	    doubleSize();
 	A[size] = x;
