@@ -16,7 +16,7 @@ class Bitvector:
         chunk_index = index % BITS_PER_INT
         return (chunk_num, chunk_index)
 
-    def size(self):
+    def get_size(self):
         return self.size
 
     def get(self, index):
