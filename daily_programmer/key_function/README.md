@@ -1,0 +1,1 @@
+from https://www.reddit.com/r/dailyprogrammer/comments/4tqy5c/20160720_challenge_276_intermediate_key_function/
