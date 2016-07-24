@@ -60,5 +60,11 @@ public class MergeSort <T extends Comparable<T>> {
 	Integer[] test3 = {1,2,2,3,3,6,8};
 	System.out.println(Arrays.toString(test3));
 	System.out.println(Arrays.toString(sorter.sort(test3)));
+
+	Integer[] test4 = {6,2,6,1,-5,9};
+	System.out.println(Arrays.toString(test4));
+	System.out.println(Arrays.toString(sorter.sort(test4)));
+
+
     }
 }
