@@ -1,10 +1,7 @@
-#  ABANDONED / UNFINISHED
-# 
 # python passes arguments by assignment, so node modification is
 # non-trivial. I have to access nodes either by their parents or change
 # the nodes' member/instance variables. 
-#
-# sigh...on to java
+
 
 
 
@@ -14,8 +11,12 @@ class Node:
         self.data = d
         self.left = None
         self.right = None
-        # adding parents because python is annoying and passes arguments by assignment
-        self.parent = None
+
+    def no_children(self):
+        return self.left is None and self.right is None
+
+    def has_both_children(self):
+        return self.left is not None and self.right is not None
 
 
 class BST:
@@ -43,10 +44,10 @@ class BST:
                 self.__insert(node.right, data)
 
 
-    def bfs(self, data):
+    def dfs(self, data):
         return self.__bfs(self.root.left, data) or self.__bfs(self.root.right, data)
 
-    def __bfs(self, node, data):
+    def __dfs(self, node, data):
         if not node:
             return None
         elif node.data == data:
@@ -56,34 +57,43 @@ class BST:
 
 
     def delete(self, data):
-        self.__delete(self.root, data)
+        self.__delete(None, self.root, False, data)
 
-    def __delete(self, node, data):
-        if not node:
+    def __delete(self, parent, current, is_left, data):
+        if not current:
             return
-        if node.data == data:
-            if not node.right and not node.left:
-                node.parent. = None
-                return
+        elif current.data is data:
+            if current.no_children():
+                if is_left:
+                    parent.left = None
+                else:
+                    parent.right = None
+            elif current.has_both_children():
+                min = get_min(current)
+                self.delete(min)
+                current.data = min
+            elif current.right:
+                if is_left:
+                    parent.left = parent.left.right
+                else:
+                    parent.right = parent.right.right
             else:
-                min = self.get_min(node.right)
-                min_data = min.data
-                self.__delete(node.right, min_data)
-                node.data = min.data
-                return
-        elif data < node.data:
-            self.__delete(node.left, data)
+                if is_left:
+                    parent.left = parent.left.left
+                else:
+                    parent.right = parent.right.left
+        elif current.data > data:
+            self.__delete(current, current.left, True, data)
         else:
-            self.__delete(node.right, data)
+            self.__delete(current, current.right, False, data)
 
     def get_min(self, node):
+        if not node:
+            return None
         if not node.left:
-            out = node
-            if node.right:
-                node = node.right
-            return out
+            return node.data
         else:
-            return self.get_min(node.left)
+            return get_min(node.left)
 
     def printpretty(self):
         self.__printpretty(self.root, "")
