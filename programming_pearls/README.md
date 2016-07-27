@@ -1,0 +1,1 @@
+I'm reading the modern classic *Programming Pearls* by Jon Bently. There are exercises and thought experiments sprinkled throughout it. This directory is a place for me to write down bits of thinking and code as I work my way through the book. 
