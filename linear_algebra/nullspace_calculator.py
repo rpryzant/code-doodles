@@ -1,5 +1,5 @@
 import numpy as np
-from Matrix import insert_col, insert_row, first_nonzero_in_row, first_zero_in_row, last_nonzero_in_row
+from matrix_utils import insert_col, insert_row, first_nonzero_in_row, first_zero_in_row, last_nonzero_in_row
 
 class LinAlg:    
 
