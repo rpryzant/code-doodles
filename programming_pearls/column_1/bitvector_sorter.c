@@ -33,7 +33,7 @@ int pop_flag(int *a) {
 	    }
 	}
     }
-    return -1;
+    return 0;
 }
 
 int main() {
@@ -43,9 +43,8 @@ int main() {
 	set_flag(a, tmp, 1);
 	n++;
     }
-    while (n) {
-	printf("%d\n", pop_flag(a));
-	n--;
+    while (tmp = pop_flag(a)) {
+      printf("%d\n", tmp);
     }
     return 0;
 }
