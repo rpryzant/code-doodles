@@ -2,6 +2,8 @@
 #
 # Note that this does NOT use numpy ndarrays to represent matrices
 #       It uses plain old 2-d python lists (first index is row, second is column)
+#
+# TODO:  pseudoinverse. import from the nullspace calculator to get row, col rank
 
 from math import pow
 
@@ -23,6 +25,28 @@ def multiply_by_scalar(A, c):
         for j, col in enumerate(A[i]):
             A[i][j] *= c
 
+
+def col_generator(A):
+    i = 0
+    while i < len(A[0]):
+        yield i, [A[r][i] for r, x in enumerate(A)]
+        i += 1
+
+def dot_product(a, b):
+    return sum(map(lambda (x,y): x*y, zip(a,b)))
+
+
+def matrix_multiply(A, B):
+    """
+    Returns C = AB
+    """
+    m = len(A)
+    n = len(B[0])
+    C = [[0 for _ in range(n)] for _ in range(m)]
+    for i, row in enumerate(A):
+        for j, col in col_generator(B):
+            C[i][j] = dot_product(row, col)
+    return C
 
 def minor(A, i, j):
     """
@@ -48,20 +72,19 @@ def cofactor(A):
     return C
 
 def transpose(A):
+    At = blank_copy(A)
     n = len(A[0])
-    for i, row in enumerate(A):
+    for i, row in enumerate(At):
         for j in range(i, n):
-            swap(A, i, j)
-
+            swap(At, i, j)
+    return At
 
 def adjoint(A):
     """
     Returns the adjoint matrix of A 
     This is the transpose of A's cofactor matrix
     """
-    C = cofactor(A)
-    transpose(C)
-    return C
+    return transpose(cofactor(A))
 
 
 def determinant(A, n = None):
@@ -102,9 +125,40 @@ def invert(A):
     return B
 
 
+def left_inverse(A):
+    """
+    Returns Aleft, the left inverse of A. Aleft = (A^t A)^-1 A^t
+    Aleft A = I
+    """
+    AtA = matrix_multiply(transpose(A), A)
+    AtAinv = inverse(AtA)
+    return matrix_multiply(AtAinv, transpose(A))
+
+
+def right_inverse(A):
+    """
+    Returns  Aright, the right inverse of A. Aright = A^t (A A^t)^-1
+    A Aright = I
+    """
+    AAt = matrix_multiply(A, transpose(A))
+    AAtInv = inverse(AAt)
+    return matrix_multiply(transpose(A), AAtInv)
+
+
+def pseudoinverse(A):
+    #TODO
+    return None
+
+
+
 test = [[1,2,0],[-1,1,1],[1,2,3]]
 print pp(test)
 print determinant(test)
 
 print pp(cofactor(test))
 print pp(invert(test))
+
+
+t1 = [[1,2],[3,4]]
+t2 = [[2,0],[1,2]]
+print pp(matrix_multiply(t1, t2))
