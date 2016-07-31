@@ -29,8 +29,6 @@ one vector then i'd just set the flag in the next vector. this means that i'd ha
 
 * Hash table...duhhhh. Hash into a small number of buckets though so that workers can retrieve letters quickly.
 
-* 
+* That's cool! NASA scientists used carrier pidgeons to transmit CAD drawing from plant to plant.
 
-* going to sleep...*TODO*: 8, 9, 10, 11, 12
-
-*
+* That's funny. Space pen (NASA) with millions of dollars of research vs space pencil (Soviets). Wonder how sharpening it went down.
