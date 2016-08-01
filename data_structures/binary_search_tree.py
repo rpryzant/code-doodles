@@ -33,13 +33,11 @@ class BST:
         if data < node.data:
             if not node.left:
                 node.left = Node(data)
-                node.left.parent = node
             else:
                 self.__insert(node.left, data)
         else:
             if not node.right:
                 node.right = Node(data)
-                node.right.parent = node
             else:
                 self.__insert(node.right, data)
 
@@ -69,7 +67,7 @@ class BST:
                 else:
                     parent.right = None
             elif current.has_both_children():
-                min = get_min(current)
+                min = self.get_min(current)
                 self.delete(min)
                 current.data = min
             elif current.right:
@@ -93,7 +91,7 @@ class BST:
         if not node.left:
             return node.data
         else:
-            return get_min(node.left)
+            return self.get_min(node.left)
 
     def printpretty(self):
         self.__printpretty(self.root, "")
