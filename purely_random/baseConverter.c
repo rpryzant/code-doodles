@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <math.h>
 
+/*
+ * converts numbers to base 10
+ */
 int to_base_10(int num, int from_base) {
     int acc = 0;
     int multiplyer = 1;
@@ -18,35 +21,37 @@ int to_base_10(int num, int from_base) {
 }
 
 /*
- * TODO FINISH - THIS GREEDY METHOD DOESN'T WORK 
+ * finds the largest power of 'base' that fits in 'num'
+ */
+int largest_power_that_fits(int num, int base) {
+    int d = 1;
+    while (num / base > 0 || num == base) {
+	num /= base;
+	d += 1;
+    }
+    return d - 1;
+}
+
+/*
+ * Converts numbers from base 10
  */
 int from_base_10(int num, int to_base) {
     int acc = 0;
     int r = 0;
-    int d = 0;
+    int d = largest_power_that_fits(num, to_base);
     while (num > 0) {
-	r = num % to_base;
-	if (r > 0) {
-	    acc += r * pow(10, d);
-	    num -= r * pow(to_base, d);
-	} else if (num == to_base) {
-	    acc += 1 * pow(10, d);
-	} else {
-	    num /= to_base;
-	}
-	d++;
+	r = num / pow(to_base, d);
+	acc += r * pow(10, d);
+	num -= r * pow(to_base, d);
+	d -= 1;
     }
     return acc;
 }
 
-
 int convert_via_base_10(int num, int from_base, int to_base) {
     num = to_base_10(num, from_base);
-    printf("%d\n", num);
     return from_base_10(num, to_base);
 }
-
-
 
 int main(int argc, char *argv[]) {
     if (argc < 4) {
