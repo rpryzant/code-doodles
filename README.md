@@ -11,3 +11,8 @@ TODO:
 * trie in java
 * decimal to hex and visa versa
 * histogramming
+* linear algebra
+  * change of basis
+  * JPEG compresion
+  * projection
+  * **PSEUDOINVERSE**
