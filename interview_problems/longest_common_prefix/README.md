@@ -1,0 +1,1 @@
+Longest common prefix of an array. 
