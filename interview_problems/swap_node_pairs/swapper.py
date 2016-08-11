@@ -31,6 +31,7 @@ class Node:
 
 def swap_pairs(ll):
     n = ll.root
+    #kick off iteration by swapping first pair
     if n.next:
         tmp = n.next
         n.next = n.next.next
@@ -60,6 +61,7 @@ def swap_pairsRh(head):
 
 # THIS is the best soln
 def swap_pairs_simple(ll):
+    #kick off iteration by tacking on additional 'prev'
     n = ll.root
     ll.root = n.next
     p = Node(0)
