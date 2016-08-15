@@ -9,7 +9,7 @@ def s(a, t, l, h):
     if a[h] <= a[l]:
         if t > a[m] or t < a[h]:
             return s(a, t, m + 1, h)
-        elif t < a[m] or t > a[l]:
+        else:
             return s(a, t, l, m - 1)
     else:
         if t > a[m]:
