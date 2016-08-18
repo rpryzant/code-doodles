@@ -1,0 +1,8 @@
+	        	j5|j3
+* fill j5		5, 0
+* pour j5 into j3	2, 3
+* empty j3     		2, 0
+* pour j5 into j3 	0, 2
+* fill j5      		5, 2
+* pour j5 into j3	4, 3
+* j5 has 4!
