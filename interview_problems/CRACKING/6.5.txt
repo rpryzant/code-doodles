@@ -6,3 +6,7 @@
 * fill j5      		5, 2
 * pour j5 into j3	4, 3
 * j5 has 4!
+
+
+
+NOTE: if two jugs are relatively prime, you can measure any value between one and the sum of the jug sizes
