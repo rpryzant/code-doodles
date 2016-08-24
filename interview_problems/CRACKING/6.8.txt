@@ -1,0 +1,12 @@
+
+14
+
+want drops to be distributed equally across eggs
+
+so for every drop of egg 1 (the skipping one), we want to do 1 less drop of egg 2
+
+so egg 1 drops at x, x-1, x-1, ... intervals
+
+solve for x+(x-1)+...+1 = 100 
+      	  x(x-1)/2 = 100
+	  x = 14
