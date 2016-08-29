@@ -1,30 +1,47 @@
-#TODO FINISH111111111
+# better soln gives end locations...to make it start make trienodes remember their depth
 
 import re
 
 class Trie:
     def __init__(self):
-        self.root = TrieNode()
+        self.roots = []
         self.ptrs = []
 
     def add(self, w):
-        self.root.add(w)
+        for root in self.roots:
+            if root.ch == w[0]:
+                root.add(w[1:])
+                return
+        self.roots.append(TrieNode(w[0]))
+        self.roots[-1].add(w[1:])
         
     # returns lens of all si's that have been found
     def step(self, c):
-        done = []
+        done = False
         i = 0
         while i < len(self.ptrs):
             self.ptrs[i] = self.ptrs[i].step(c)
             if not self.ptrs[i]:
                 del self.ptrs[i]
             else:
-                if self.ptrs[i].is_leaf():
-                    done.append(self.ptrs[i].depth())
+                if not self.ptrs[i].children:
+                    done = True
                 i += 1
+        for root in self.roots:
+            if root.ch == c:
+                tmp = root
+                self.ptrs.append(tmp)
         return done
+
     def __str__(self):
-        return str(self.root)
+        for root in self.roots:
+            print root.ch
+            for child in root.children:
+                print "\t%s"% child.ch
+                for chh in child.children:
+                    print "\t%s"% chh.ch
+
+        return '\n'.join(str(root) for root in self.roots)
 
     
 class TrieNode:
@@ -32,53 +49,37 @@ class TrieNode:
         self.ch = x
         self.children = []
         
+        
     def add(self, w):
         if not w:
             return
-        if not self.ch:
-            self.ch = w[0]
-            start = 1
-        else:
-            start = 0
-        if any(map(lambda x: x.ch == w[start], self.children)):
-            for child in self.children:
-                if child.ch == w[start]:
-                    child.add(w[start:])
-                    return
-        else:
-            self.children.append(TrieNode(w[start]))
-            self.children[-1].add(w[start:])
-
-    def is_leaf(self):
-        return self.children is []
+        for child in self.children:
+            if child.ch == w[0]:
+                child.add(w[1:])
+                return
+        self.children.append(TrieNode(w[0]))
+        self.children[-1].add(w[1:])
 
     def step(self, c):
-        for child in children:
+        for child in self.children:
             if child.ch == c:
                 return child
         return None
 
     def __str__(self):
-        print "*******"
-        for x in self.children:
-            print x.ch
-        print "*******"
-        return '%s' % self.ch + '\n\t'.join(str(x) for x in self.children)
+        return self.ch
 
 def find_all_better(b, T):
     t = Trie()
     for s in T:
         t.add(s)
-
     print t
-
     starts = []
     for i, ch in enumerate(b):
-        starts += map(lambda x: x - i, t.step(ch))
+        if t.step(ch):
+            starts += [i]
     return starts
     
-
-
 
 
 
