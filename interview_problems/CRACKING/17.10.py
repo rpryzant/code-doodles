@@ -1,3 +1,5 @@
+# its not what she gave in the book, but i like my solution! I got it working on the first try!
+
 
 # O(n^2) time O(1) space
 def find_majority_brute(a):
