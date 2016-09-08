@@ -1,6 +1,7 @@
 This repo is full of the random bits of code I write. 
 
 TODO:
+* tensorflow stuff
 * string addition
 * string multiplication
 * string division (long division)
