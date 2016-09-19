@@ -10,7 +10,7 @@ def sqrt(x):
         sq = mid * mid
         if abs(sq - x) < EPSILON:
             return mid
-        elif sq > x:
+        elif sq > x or sq < 0:
             high = mid
         else:
             low = mid
