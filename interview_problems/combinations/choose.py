@@ -1,7 +1,39 @@
 # meh...not super happy about this one...
 
+
+
+
+def dfs(candidates, start, end, sofar, result):
+    if len(sofar) == end:
+        result.append(sofar[:])
+        return
+    for i in range(start, len(candidates)):
+        sofar.append(candidates[i])
+        dfs(candidates, i + 1, end, sofar, result)
+        sofar.pop()
+
+def combine(n, k):
+    res = []
+    if k < 1 or n < 1 or k > n:
+        return res
+    candidates = [x for x in range(1, n+1)]
+    sofar = []
+    dfs(candidates, 0, k, sofar, res)
+    return res
+                  
+                
+print combine(4, 3)
+
+
+
+
+
+
+
+
+
 def choose(n, k):
-    if k > n:
+    if k > n or k < 1 or n < 1:
         return
     # init ptrs
     ptrs = [i for i in range(k)]
@@ -24,3 +56,14 @@ def choose(n, k):
 
 for l in choose(4, 3):
     print l
+
+
+
+
+
+
+
+
+
+
+
