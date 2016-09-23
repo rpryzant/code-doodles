@@ -9,8 +9,6 @@ def search(M, w):
     candidates = [(r, c, 1) for r, row in enumerate(M) for c, ch in enumerate(row) if ch == w[0]]
     visited = []
 
-
-
     while len(candidates) > 0:
         coord = candidates.pop()
 
