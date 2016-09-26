@@ -8,7 +8,6 @@ class Node:
     def append(self, new):
         if not self.next:
             self.next = new
-            new.next = None
         else:
             self.next.append(new)
 
@@ -32,20 +31,26 @@ def partition(head, x):
         if r.d < x:
             if not lh:
                 lh = r
-                lh.next = None
             else:
                 lh.append(r)
         else:
             if not gh:
                 gh = r
-                gh.next = None
             else:
                 gh.append(r)
+        r.next = None
         r = tmp
 
     lh.get_tail().next = gh
 
     return lh
+
+
+
+
+
+
+
 
 test = Node(1)
 test.append(Node(4))
