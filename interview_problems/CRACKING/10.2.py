@@ -1,4 +1,4 @@
-
+# i like my solution to this, but had some trouble getting the indexes right. be careful, Reid!
 
 
 def group_anagrams(A):
