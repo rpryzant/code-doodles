@@ -1,0 +1,1 @@
+** Some notes from learning sql **
