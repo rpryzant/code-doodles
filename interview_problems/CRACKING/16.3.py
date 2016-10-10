@@ -18,7 +18,7 @@ def intersection(sA, sB):
     x = -(bB - bA) / (mB - mA)
     y = mA * x + bA
 
-    return (x, y) if x >= sA[0][0] and x <= sA[1][0] else None
+    return (x, y) if x >= sA[0][0] and x <= sA[1][0] and x >= sB[0][0] else None
 
 
 
