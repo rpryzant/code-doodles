@@ -1,0 +1,45 @@
+
+
+==== WHEN DESIGNING A SYSTEM, YOU SHOULD KNOW
+# posts/actions
+# reads
+# writes
+# requests/sec
+# storage
+# bytes per request type
+
+
+
+
+
+===== SIZE
+Commodity servers have 512 GB hds
+30% of server space is reserved for OS -> 350 GB avail
+FB has 1.5B monthly active users (2015)
+photos are ~500 kb each
+urls are ~100 b each
+web page is ~1000 kb
+HTTP GET is 2kb
+Google gete ~40k queries/sec
+Google result page: 100kb
+There are ~500k unique english words
+There are ~30T websites out there
+Standard apache server can handle 400 requests/sec
+
+
+
+=====  SPEED
+L1 cache reference		.5ns
+L2				7ns
+memory reference		100ns
+read 1mb from memory		250,000 ns
+disk seek     			20,000,000 ns
+packet around the world		150,000,000 ns
+2x compression 1 kb		3k ns
+
+
+
+===== TIME
+days => sec ~~ 1/100k
+
+OBSERVATION: Network really isn't that bad...a packet around the world costs roughtly as much as a single disk seek
