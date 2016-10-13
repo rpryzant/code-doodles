@@ -42,7 +42,7 @@ min_heap = []
 for query, freq in freqs.items():
     if len(min_heap) < K:
         heapq.heappush(min_heap, (freq, query))
-    elif freq < min_heap[-1]:
+    else:
         heapq.heappushpop(min_heap,(freq, query))
 
 # my results
