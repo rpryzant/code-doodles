@@ -15,6 +15,19 @@ def mcr(k, coins, M):
     return M[k-1]
 
 
+def min_couns_2(k, coins):
+    cache = {}
+    mc(x):
+        if x < 0:
+            return BIG
+        elif k == 0:
+            return 0
+        cache[k-1] = min(mc(k - c) for c in coins) + 1
+        return cache[k-1]
+    return mc(k)
+
+
+
 print min_coins(7, [100,50,25,10,5,1])
 print min_coins(13, [100,50,25,10,5,1])
 print min_coins(15, [100,50,25,10,5,1])
