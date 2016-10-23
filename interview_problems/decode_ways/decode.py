@@ -49,7 +49,7 @@ def num_ways(M):
             return cache[i]
         if i == 0 and M[0] == '0' or i < 0:
             cache[i] = 0
-        if i == 0:
+        elif i == 0:
             cache[i] = 1
         else:
             cache[i] = nw(i-1) + (1 if M[i-1] != '0' and can_decode(M[i-1:i+1]) else 0)
