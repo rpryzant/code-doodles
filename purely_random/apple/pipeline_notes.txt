@@ -1,0 +1,33 @@
+
+=========PIPELINE
+
+=====(1): assign each datapoint unique id (make registry)
+
+generate_registry.py
+	script
+	loop over labels/tweets
+		featurize tweets (using features.feature_mapping_for_tweet - returns {feature name => value})
+			loop over tweet features
+				“register” each feature (assign unique ID)
+	uses FeatureRegistry (registry.py) to write/save features to disk
+
+=====(2): vectorize data and write to file
+
+vectorize.py
+	loops over labels/tweets
+	make feature vector {feature id => feature value} and write that to disk in svm light format
+		feature vectors are made with Vector.vectorize_tweet(tweet, registry, label)
+			use features.feature_mapping_for_tweet again to featurize tweets
+			pull id for each feature out of registry
+			vec[feature id] = value
+
+
+=====(3): make train/test splits
+	test is head
+	train is tail	
+	TODO this is problematic. 
+		1) No shuffling of data
+		2) only using 6000 of our 23000+ examples??
+
+=====(4): train model on training set, test on test set
+	uses liblinear out of the box

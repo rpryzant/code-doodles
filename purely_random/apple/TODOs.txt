@@ -1,0 +1,53 @@
+ mistakes in existing code:
+	data not split properly
+	not actually cross validating 
+	has_hashtag is actually num_hashtags
+
+1) data improvements                                     
+	shuffle train/test data
+	make use of whole dataset, not just first/last 3000
+
+	DONE - drop in performance (-> 49%)
+		drop is to be expected (training set is nondeterministic) but at 49% i might as well be guessing…no better than baseline 
+	
+
+2) feature improvements
+	current:
+		has hashtag?
+		num retweets?
+		total num !’s
+		tweet time
+		feature template for num “!”s, “!!”s, etc
+	todo:
+		num followers
+		num user mentions
+		num url’s
+		expanded url features? (e.g. domain?)
+		word features
+		num @’s
+		num misspelled words
+		num named entities
+		feature selection? (throw away irrelevant features with chi sq or mutual information?)
+
+
+
+3) modeling improvements
+	right now doing default lib linear
+		l2 regularized l2 loss sum
+		c = 1
+		epsilon = 0.1
+		bias = 01
+		NO CROSS VALIDATION (need to set a flag for that)
+	try out naive bayes? smoothing splines?
+
+
+
+
+
+data:
+	inject noise
+	create fake ppl/data
+		draw from both with some probability 
+	normalize features
+	reverse term frequency	
+		normalize by class occurrence

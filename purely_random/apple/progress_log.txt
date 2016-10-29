@@ -1,0 +1,35 @@
+
+
+-fixed train/test splits
+-made liblinear do real x-validation (10 fold)
+-renamed has_hashtag
+-preliminary feature engineering
+	added n_mentions (~12% boost)
+	added n_ats (~1% boost)
+	added n_mispellings (~5% boost)
+	added n_urls (scrapped - hurt performance)
+	added n_proper_nouns (scrapped - hurt performance)
+	added feature for count of each word in tweet 
+		hurt performance, but cross validation accuracy went up
+		===> overfitting
+		tried to do some work to make this a useful feature in vain
+		scrapping for now
+		TODO - make work, introduce bigram counts?
+
+-increased proportion of training data to 0.85
+-brought down cross validation to 5 (don’t want to wait as long…)
+-preliminary modeling work	
+	-svm is probably pretty good choice of model
+	-current loss function (l2) seems pretty good (others don’t help)
+	-logistic regression doesn’t give that much benefit either
+	-not going to waste time fiddling with parameters either, probably
+		won’t give me huge gains anyway 
+
+==== check in with Volta  - takeaways ======	
+	-remember that you’re evaluated on a big big dataset (100k+ examples)
+	-SVM’s are pretty good. most of your gains are going to come from
+		feature engineering and data preparation
+	-need to normalize features!
+
+-implemented global feature normalization
+-backpedaled, made normalization optional
