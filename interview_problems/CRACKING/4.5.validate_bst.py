@@ -38,3 +38,17 @@ t.left.left = Node(2)
 t.left.right = Node(6)
 
 print is_valid(t)
+
+
+
+def isValid2(x):
+    def valid(n, l, h):
+        if x is None:
+            return True
+
+        if (l != None and n.data < l) or (h != None and n.data > h):
+            return False
+
+        return valid(n.left, l, n.data) and valid(n.right, n.data, h)
+
+print isValid2(t)
