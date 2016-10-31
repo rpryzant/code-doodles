@@ -31,3 +31,27 @@ def isBalanced2(root):
         return True
     return abs(height(root.left) - height(root.right)) <= 1
 
+
+
+# roll functions to one
+# reserve a "height" for unbalanced
+# O(n) time (visit nodes once), O(log n) space (recursive calls)
+def isBalanced(root):
+    if root is None:
+        return 0
+
+    l = isBalanced(root.left)
+    if l is None:
+        return l
+    
+    r = isBalanced(root.right)
+    if r is None:
+        return r
+
+    if abs(l - r) > 1:
+        return None
+    else:
+        return max(l, r) + 1
+
+def checkBalanced(root):
+    return isBalanced(root) != None
