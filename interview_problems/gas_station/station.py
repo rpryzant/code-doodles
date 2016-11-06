@@ -5,6 +5,10 @@ I like my solution to this one!!
 I haven't completely comvinced myself that it is guarenteed to be correct,
    but intuitively it makes a lot of sense. 
 
+i guess you could say that I can't prove to myself that it works,
+   but i also can't prove that it doesn't work.
+
+
 My soln is as follows:
 
 1) calculate a difference vector that shows how your gas level will change
