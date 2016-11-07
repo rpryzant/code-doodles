@@ -1,0 +1,12 @@
+Placing 31 dominoes into an 8x8 board with opposite corners shaved off wouldn't work.
+
+Here's why.
+
+Each domino needs a "complete color pair" to be placed. A complete color pair
+       is an adjacent + free white & black. 
+
+The thing is, with opposite corners shaved off, the number of colors is now unequal. 
+
+So the number of complete w/b pairs is less than the number of dominoes. 
+
+So there aren't enough spots to place all the dominoes.
