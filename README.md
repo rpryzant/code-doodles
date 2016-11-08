@@ -1,5 +1,8 @@
 This repo is full of the random bits of code I write. 
 
+* permutations in lexographical order
+
+
 TODO:
 * tensorflow stuff
 * string addition
