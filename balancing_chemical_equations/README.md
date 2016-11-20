@@ -70,6 +70,3 @@ Systems of the form `Ax = 0` are easy to solve. Any vector that is in the nullsp
 
 This program finds an independant basis for `nullspace(A)` via gaussian elimination. It then takes each vector and converts it back to chemical equation form. Each resulting equation will be a balanced version of the input!
 
-
-
- * tex up the matrices in this readme
