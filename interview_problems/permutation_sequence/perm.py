@@ -1,4 +1,3 @@
-# i like my solution!!
 """
 description:
 
