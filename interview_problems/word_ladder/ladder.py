@@ -16,7 +16,7 @@
 
 ===bfs
  1) method that gives all possible successors (done under the hood somehow)
- 2) bfs on that
+ 2) bfs on that (bidirectional)
 
 """
 from Queue import Queue
