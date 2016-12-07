@@ -1,0 +1,195 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 ArialMT;\f1\fnil\fcharset128 HiraginoSans-W3;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;\csgray\c100000;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid102\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid103\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid104\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li2880\lin2880 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid105\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li3600\lin3600 }{\listname ;}\listid2}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}}
+\vieww12240\viewh15840\viewkind1
+\deftab720
+\pard\pardeftab720\ri0\sl276\slmult1\partightenfactor0
+\ls1\ilvl0
+\f0\b\fs60 \cf0 LECTURE 5 \
+MODEL FREE CONTROL\
+\pard\tx360\tx720\pardeftab720\li720\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl0
+\b0\fs24 \cf0 \uc0\u9679 	Want model free control - no info, our agent is just dropped into environment\
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1\cf0 \uc0\u9675 	We want model-free because mdp model/environment is known, but is too big/complicated to sample from/model directly\
+\pard\tx360\tx720\pardeftab720\li720\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl0\cf0 \uc0\u9679 	
+\b On-policy
+\b0  - learning on the job (learning about policy while following that policy)
+\b \
+\ls2\ilvl0
+\b0 \uc0\u9679 	
+\b Off policy - 
+\b0 learning from someone else's policy
+\b \
+\ls2\ilvl0
+\b0 \uc0\u9679 	Recap 
+\b MC
+\b0 :\
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1\cf0 \uc0\u9675 	Sample policy all the way to terminal state many times\
+\uc0\u9675 	Run through state/action/reward triples in your trajectories to update stuff\
+\uc0\u9675 	V, Q values are literally means\
+\pard\tx360\tx720\pardeftab720\li720\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl0\cf0 \uc0\u9679 	Recap: 
+\b policy iteration
+\b0 \
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1\cf0 \uc0\u9675 	Evaluate policy, improve policy, back and forth\
+\uc0\u9675 	Slot in various stuff for evaluation & improvement\
+\pard\tx360\tx720\pardeftab720\li720\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl0\cf0 \uc0\u9679 	MONTE CARLO METHODS\
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1\cf0 \uc0\u9675 	Attempt 1: 
+\b monte carlo eval & greedy policy improvement w/r/t V
+\b0 \
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2\cf0 \uc0\u9632 	Monte carlo policy eval: execute trajectories and take means\
+\pard\tx2520\tx2880\pardeftab720\li2880\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl3\cf0 \uc0\u9679 	Problem: Slow, many episodes to make this work (also high variance but we\'92ll get into this later)\
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2\cf0 \uc0\u9632 	Policy improvement: greedy. Many problems\
+\pard\tx2520\tx2880\pardeftab720\li2880\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl3\cf0 \uc0\u9679 	Problem: If you act greedily, this doesn\'92t guarantee the trajectories you follow will adequately explore state space\
+\uc0\u9679 	Problem: Still relies on V (which is by definition a model of the MDPl), so not model free\
+\pard\tx3240\tx3600\pardeftab720\li3600\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl4\cf0 \uc0\u9675 	Solution: use Q! \
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1\cf0 \uc0\u9675 	Attempt 2: 
+\b monte carlo
+\b0  +  
+\b greedy 
+\b0 + 
+\b Q
+\b0 \
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2\cf0 \uc0\u9632 	Model free because it uses Q (not V)\
+\uc0\u9632 	Doesn\'92t guarantee that you\'92ll get to optimal values though because 
+\b greedy policy does not explore
+\b0  \
+\pard\tx2520\tx2880\pardeftab720\li2880\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl3\cf0 \uc0\u9679 	Solution: 
+\b epsilon-greedy exploration
+\b0 \
+\pard\tx3240\tx3600\pardeftab720\li3600\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl4\cf0 \uc0\u9675 	Flip coin, with prob e take random action, (1-e) take greedy action\
+\uc0\u9675 	Nice because it guarantees that the policy will improve\
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1\cf0 \uc0\u9675 	Attempt 3: 
+\b monte carlo
+\b0  + 
+\b e-greedy 
+\b0 +
+\b  Q
+\b0 \
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2\cf0 \uc0\u9632 	Quasi-problem: its slow to run out many episodes (like required in MC) to fully evaluate policy. You can act greedily with respect to the freshest information as soon as you complete one episode\
+\pard\tx2520\tx2880\pardeftab720\li2880\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl3\cf0 \uc0\u9679 	Solution: update Q after every episode instead of after a batch of episodes\
+\pard\tx360\tx720\pardeftab720\li720\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl0\cf0 \uc0\u9679 	TD METHODS - slot in TD instead of MC in control loop to evaluate policy\
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1\cf0 \uc0\u9675 	Advantage: can evaluate function after 1 step - don't\'92 need to run entire episode\
+\uc0\u9675 	Idea: SARSA\
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2\cf0 \uc0\u9632 	Sample environment with S, A to get R, S\'92, A\'92\
+\uc0\u9632 	Move Q in direction of TD target \
+\uc0\u9632 	Instead of taking mean like in MC, bootstrap on current representation of Q to get this target (r + gQ(S\'92, A\'92))\
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1\cf0 \uc0\u9675 	Attempt 1: 
+\b sarsa evaluation 
+\b0 +  
+\b e-greedy policy improvement
+\b0 \
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2\cf0 \uc0\u9632 	Advantage; don\'92t need to run out entire episodes to update q. Can update policy eval on EVERY step\
+\uc0\u9632 	Need some constraints on step size, epsilon to guarantee convergence (not super important, i pasted some screenshots into our proposal outline that show the rules)\
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1\cf0 \uc0\u9675 	Attempt 2: try to get the best of both worlds:
+\b  
+\b0 middle ground between SARSA and MC: 
+\b n-step SARSA
+\b0 \
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2\cf0 \uc0\u9632 	MC is unbiased but higher variance - each trajectories could wander off anywhere\
+\uc0\u9632 	SARSA is low variance but high bias because of the bootstrapping\
+\uc0\u9632 	The first idea is to introduce a Qn term which can vary between value produced by MC and SARSA\
+\uc0\u9632 	\
+\uc0\u9632 	PROBLEM: How to choose n? \
+\pard\tx2520\tx2880\pardeftab720\li2880\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl3\cf0 \uc0\u9679 	Solution: combine n-step Q-returns (combine the Qn\'92s in screenshot above) in a smart way\
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1\cf0 \uc0\u9675 	Attempt 3: 
+\b Sarsa(lambda) 
+\b0 and
+\b  eligibility traces
+\b0 \
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2\cf0 \uc0\u9632 	Introduce a Qlambda term which combines all n-step Q-returns. Average over them, give closer trajectories more weight, let lambda control how far-sighted you want to be\
+\uc0\u9632 	 \
+\uc0\u9632 	Lambda = 1 
+\f1 \'81\'cb
+\f0  MC\
+\uc0\u9632 	Lambda = 0 => SARSA\
+\uc0\u9632 	Lambda is a knob which lets us control bias/variance tradeoff (recall bias/varience differences between MC/SARSA)\
+\uc0\u9632 	Problem: this looking forward in time. Want to be able to run things in real time without running out entire episodes (recall that was why we didn\'92t like MC to begin with)\
+\pard\tx2520\tx2880\pardeftab720\li2880\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl3\cf0 \uc0\u9679 	Solution: 
+\b backward-view sarsa-lambda
+\b0 . Give each past experience a weight and use those for updates. The record of past experience is called an 
+\b eligibility trace
+\b0 \
+\uc0\u9679 	
+\b Eligibility traces/backward algorithm gives the exact same results as the forward view, it\'92s just more feasible to implement because you can\'92t look into the future\
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2
+\b0 \cf0 \uc0\u9632 	Intuitively, sarsa lambda gives a little credit to the whole path of state/action pairs which led to the reward (with more credit going to the more recent steps). The lambda controls how far you propagate back this information. One-step sarsa only propagates stuff back 1 step. So the lambda makes the flow of information back through time much faster\
+\pard\tx360\tx720\pardeftab720\li720\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl0\cf0 \uc0\u9679 	
+\b OFF-POLICY LEARNING\
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1
+\b0 \cf0 \uc0\u9675 	So far we\'92ve only covered the case where the policy we\'92re learning is the policy we\'92re watching\
+\uc0\u9675 	Off-policy learning is like looking over someone\'92s shoulder. Lets us learn from observing humans or other agents\
+\uc0\u9675 	Can also be used to 
+\b re-use experience generated by old policies
+\b0  (pretend those old policies are someone else)\
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2\cf0 \uc0\u9632 	Very data efficient - lets you reuse data\
+\uc0\u9632 	
+\b We could do this!!\
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1
+\b0 \cf0 \uc0\u9675 	Mechanism 1 - 
+\b importance sampling
+\b0 \
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2\cf0 \uc0\u9632 	Use some formula to combine old/new distributions/policies\
+\uc0\u9632 	Don\'92t use with MC - EXTREMELY high varience\
+\uc0\u9632 	For TD\
+\pard\tx2520\tx2880\pardeftab720\li2880\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl3\cf0 \uc0\u9679 	Only need to importance sample over one step\
+\pard\tx1080\tx1440\pardeftab720\li1440\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl1\cf0 \uc0\u9675 	Mecahnism 2 - 
+\b Q-learning
+\b0 \
+\pard\tx1800\tx2160\pardeftab720\li2160\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl2\cf0 \uc0\u9632 	Select next action using behavior policy (primary policy)\
+\uc0\u9632 	Consider alternative action using alternate policy\
+\uc0\u9632 	Update Q towards value of 
+\b alternative action 
+\b0 because that\'92s what you \'93should\'94 have gotten if you were following the policy you care about\
+\uc0\u9632 	Special case: the famous, well known Q-learning algorithm: allow 
+\b both behavior and target policies to improve
+\b0  \
+\pard\tx2520\tx2880\pardeftab720\li2880\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl3\cf0 \uc0\u9679 	At every step make target policy e-greedy with respect to Q\
+\uc0\u9679 	S, A, R, S\'92, max over A\'92s\
+\uc0\u9679 	So whereas SARSA takes the action of its policy (happens to be e-greedy), Q-learning chooses actions by taking a max over actions, not the perscription of some external policy\
+\pard\tx3240\tx3600\pardeftab720\li3600\fi-360\ri0\sl276\slmult1\partightenfactor0
+\ls2\ilvl4\cf0 \uc0\u9675 	This is what confuses me - Q-learning is essentially following a greedy policy, so q learning w e-greedy policy is the same thing as SARSA?\
+}
