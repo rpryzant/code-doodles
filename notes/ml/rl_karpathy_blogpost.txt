@@ -1,0 +1,9 @@
+http://karpathy.github.io/2016/05/31/rl/
+
+
+-The atari game playing paper used DQN, not policy gradients.
+-“Dqn is so 2013” - PG is preferred because its end-to-end
+-PG works better (paper by same authors of atari DQN 2013): https://arxiv.org/pdf/1602.01783v2.pdf
+-Code: https://gist.github.com/karpathy/a4166c7fe253700972fcbc77e4ea32c5
+
+
