@@ -1,3 +1,7 @@
+todo mention openess, https://speakerdeck.com/jakevdp/in-defense-of-extreme-openness
+
+
+
 This repo is full of the random bits of code I write. 
 
 things i'd like to do:
