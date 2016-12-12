@@ -2,6 +2,8 @@ This repo is full of the random bits of code I write.
 
 things i'd like to do:
 * tensorflow stuff
+  * translation!!
+  * image de-shittifier!!
 * string addition
 * string multiplication
 * string division (long division)
