@@ -2,7 +2,7 @@ TOOD: project to auto convert latex documents to mathjax appropriate for web vie
 
 
 
-
+=====  CONVERSIONS I'VE NOTICED SO FAR:
 
 \bm \bf
 \intercal T
@@ -11,10 +11,10 @@ TOOD: project to auto convert latex documents to mathjax appropriate for web vie
 \bm{x} {\bf x}
 \it{x}  $x$
 
-
+==== DON'T FORGET ABOUT BIBS
 bibliography/references
 
-
+==== PICTURES TOO
 <img src="figs/mlp.jpg" alt="Mountain View" style="width:75%;">
 TO
 \begin{figure}[H]
