@@ -5,6 +5,7 @@ todo mention openess, https://speakerdeck.com/jakevdp/in-defense-of-extreme-open
 This repo is full of the random bits of code I write. 
 
 things i'd like to do:
+* rmsprop, relu, batch norm, lstm, gru
 * tensorflow stuff
   * translation!!
   * image de-shittifier!!
