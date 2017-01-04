@@ -1,0 +1,694 @@
+;;; Reid Pryzant
+;;; Jonas Luebbers
+;;; Jaclyn Porfilio
+;;; (c) 2013
+main:	
+	;; r1 is free
+	;; r2 is free
+	;; r3 is free
+	;; r4 is free
+	;; r5 is free
+	.requ	srci, r5	; index of source 1
+	.requ	wpcp, r8	; address of WARM program counter
+	.requ	wpc, r9		; WARM program counter
+	.requ	wr, r10		; address of WARM virtual registers
+	.requ	opcd, r11	; the current opcode
+	.requ	dest, r12	; index of destination register
+	.requ	src1, r13	; value in source 1
+	.requ	src2, r14	; value in source 2
+	.requ	shn, r15	; shift count	
+	
+	;; load WARM program
+	lea 	wr0, wr
+	lea	15(wr), wpcp
+	lea	warm, r0
+	trap	$SysOverlay
+
+	;; initialize the stack pointer (wr13) to what it automatically is in warm
+	mov	$0x00ffffff, 13(wr)
+	jmp	loop
+
+
+	
+;;; ########################### BEGIN PROGRAM LOOP ##################################
+incPc:	add	$1, (wpcp)
+
+	;; changed the wpc into a best of both worlds 
+	;; (wpcp) is now the raw value of the pc, and we access instructions from a
+	;; base program pointer like an array, with the index stored in memory.
+loop:	and	$0xFFFFFF, (wpcp)
+	mov	(wpcp), wpc		
+	
+	;; get condition bits
+	mov	warm(wpc), r4 	;##############################################################################
+	shr	$29, r4
+	mov	ccds(r4), rip
+
+ccds:	.data   ccPass, incPc, doEq, doNe, doLt, doLe, doGe, doGt
+	
+	
+;;; ############################ CONDITION CODES #####################################
+;;; method: 1) recover cc bits from virtual cc register
+;;; 	    2) jump back to the start if condition is not met, keep going if it is met
+
+eqTbl:	.data	incPc, incPc, incPc, incPc, ccPass, ccPass, ccPass, ccPass, incPc, incPc, incPc, incPc, ccPass, ccPass, ccPass, ccPass
+
+doNe:	mov	16(wr), r4
+	mov	neTbl(r4), rip
+
+neTbl:	.data	ccPass, ccPass, ccPass, ccPass, incPc, incPc, incPc, incPc, ccPass, ccPass, ccPass, ccPass, incPc, incPc, incPc, incPc
+	
+doLt:	mov	16(wr), r4
+mov	ltTbl(r4), rip
+
+ltTbl:	.data	incPc, ccPass, incPc, ccPass, incPc, ccPass, incPc, ccPass, ccPass, incPc, ccPass, incPc, ccPass, incPc, ccPass, incPc
+	
+doLe:	mov	16(wr), r4
+	mov	leTbl(r4), rip
+	
+leTbl:	.data	incPc, ccPass, incPc, ccPass, ccPass, ccPass, ccPass, ccPass, ccPass, incPc, ccPass, incPc, ccPass, ccPass, ccPass, ccPass
+	
+doGe:	mov	16(wr), r4
+	mov	geTbl(r4), rip
+
+
+geTbl:	.data	ccPass, incPc, ccPass, incPc, ccPass, incPc, ccPass, incPc, incPc, ccPass, incPc, ccPass, incPc, ccPass, incPc, ccPass
+
+doGt:	mov	16(wr), r4
+	mov	gtTbl(r4), rip
+
+gtTbl:	.data	ccPass, incPc, ccPass, incPc, incPc, incPc, incPc, incPc, incPc, ccPass, incPc, ccPass, incPc, incPc, incPc, incPc
+
+
+	
+ccPass:	mov     warm(wpc), opcd
+	and     $0b00011111100000000000000000000000, opcd
+	shr     $23, opcd
+	mov     warm(wpc), r0
+	trap    $SysPLA
+	mov     pla(r0), rip
+
+pla:	.data   al1, al4, al3, doBl, al2, al1, al0, swi1, al1ns, 0, 0, doB, 0, al1ns, al0ns, swi1ns, mov1,
+
+doMlas:	mov	ccr, 16(wr)	
+doMla:	mov	isPc(dest),rip
+	
+pla2:	.data	0, mov0, swi0, mov1ns
+doEq:	mov     16(wr), r4
+	mov     eqTbl(r4), rip
+pla3:	.data 	 0, mov0ns, swi0ns
+
+al0:	mov     warm(wpc), srci
+	and     $0x78000, srci
+	shr     $15, srci
+	mov     0(wr, srci), src1
+mov0:	mov	warm(wpc), dest
+	and	$0x780000, dest
+	shr	$19, dest
+swi0:	mov	warm(wpc), src2
+	and	$0x1FF, src2
+	mov     warm(wpc), r4
+	and     $0x3E00, r4
+	shr     $9, r4
+	shl	r4, src2
+	mov	ops(opcd),rip
+
+al0ns:	mov     warm(wpc), srci
+	and     $0x78000, srci
+	shr     $15, srci
+	mov     0(wr, srci), src1
+mov0ns:	mov	warm(wpc), dest
+	and	$0x780000, dest
+	shr	$19, dest
+swi0ns:	mov	warm(wpc), src2
+	and	$0x1FF, src2
+	mov	ops(opcd),rip
+	
+al1:	mov	warm(wpc), srci
+	and     $0x78000, srci
+	shr     $15, srci
+	mov     0(wr, srci), src1
+mov1:	mov     warm(wpc), dest
+	and     $0x780000, dest
+	shr     $19, dest
+swi1:	mov	warm(wpc), src2
+	and	$0x3C0, src2
+	shr	$6, src2
+	mov	0(wr, src2), src2
+	mov	warm(wpc), shn
+	and	$0x3F, shn
+	mov     warm(wpc), r4
+	and	$0xC00,	r4
+	shr	$10, r4
+	mov	shiftOps(r4), rip
+
+al1ns:	mov	warm(wpc), srci
+	and     $0x78000, srci
+	shr     $15, srci
+	mov     0(wr, srci), src1
+mov1ns:	mov     warm(wpc), dest
+	and     $0x780000, dest
+	shr     $19, dest
+swi1ns:	mov	warm(wpc), src2
+	and	$0x3C0, src2
+	shr	$6, src2
+	mov	0(wr, src2), src2
+	mov	ops(opcd), rip
+	
+al2:    mov     warm(wpc), srci
+	and     $0x78000, srci
+	shr     $15, srci
+	mov     0(wr, srci), src1
+	mov     warm(wpc), dest
+	and     $0x780000, dest
+	shr     $19, dest
+	mov     warm(wpc), src2	
+	and     $0x3C0, src2
+	shr     $6, src2
+	mov     0(wr, src2), src2
+	mov    warm(wpc), shn
+	and    $0xF, shn
+	mov    0(wr, shn), shn
+	cmove	 ops(opcd), rip		; dont shift if shn = 0
+v	mov	warm(wpc), r4
+	and	$0xC00, r4
+	shr	$10, r4
+	mov	shiftOps(r4), rip
+	
+al3:    mov     warm(wpc), srci
+	and     $0x78000, srci
+	shr     $15, srci
+	mov     0(wr, srci), src1
+	mov     warm(wpc), dest
+	and     $0x780000, dest
+	shr     $19, dest
+	mov     warm(wpc), src2	
+	and     $0x3C0, src2
+	shr     $6, src2
+	mov     0(wr, src2), src2
+	mov	warm(wpc), r4
+	and	$0xF, r4
+	mov	0(wr, r4), r4
+	mul	r4, src2
+	mov	src1, 0(wr, dest)
+	add	src2, 0(wr, dest)
+	mov	ops(opcd), rip
+	
+
+al4:	mov	warm(wpc), dest
+	and	$0x780000, dest
+	shr	$19, dest	
+        mov     warm(wpc), srci
+	and     $0x78000, srci
+	shr	$15, srci
+	mov	0(wr, srci), src1
+	mov	warm(wpc), src2
+	shl	$18, src2
+	sar	$18, src2
+	mov	ops(opcd), rip
+
+;;; al5 is the same as al1
+
+;;; al6 is doB/doBl
+
+ops: .data   doAdd, doAdc, doSub, doCmp, doEor, doOrr, doAnd, doTst, doMul, doMla, doDiv, doMov, doMvn, doSwi, doLdm, doStm, doLdr, doStr, doLdu, doStu, doAdr, 0, 0, 0, doB, doB, doBl, doBl
+shiftOps: .data   doLsl, doLsr, doAsr, doRor
+ops2:	.data  doAdds, doAdcs, doSubs, doCmp, doEors, doOrrs, doAnds, doTst, doMuls, doMlas, doDivs, doMovs, doMvns, doSwis, doLdm, doStm, doLdrs, doStrs, doLdus, doStus, doAdr, 0, 0, 0, doB, doB, doBl, doBl
+	
+	
+;;; ############################# SHIFTING ########################################
+;;;	it seemed like shifting was the last thing to do before acting on the opcode
+;;; 	because after we shift, we'll have the dest, src1, and src2.
+;;; 	after the shift, jump to the instruction?
+
+
+
+	;; shift left 
+doLsl:	shl	shn, src2	
+	mov	ops(opcd), rip
+
+	;; shift right
+doLsr:	shr	shn, src2
+	mov	ops(opcd), rip
+
+	;; arethmatic right
+doAsr:	sar	shn, src2
+	mov	ops(opcd), rip
+
+	;;  rotate right
+doRor:	mov	src2, r4
+	shr	shn, src2
+	or	$0x80000000, shn
+	add	$32, shn
+	shl	shn, r4
+	or	r4, src2
+	mov	ops(opcd), rip
+
+	
+;;; ########################### ARITHMETIC INSTRUCTIONS ########################################
+;;; at this point it's assumed that we have 1) the index of the destination register (in dest)
+;;; 2) the value from the source register (in src1), and 3) a secondary operand (in src2).
+	
+doAdd:	mov	src1, 0(wr,dest)
+	add	src2, 0(wr,dest)
+	mov	isPc(dest), rip
+doAdds:	mov	src1, 0(wr, dest)
+	add	src2, 0(wr, dest)
+	mov	ccr, 16(wr)		; set bits
+	mov	isPc(dest), rip
+
+;;; CHANGED THIS - DO WE GET THE C BIT FROM THE WIND OR VWAVE CCR?
+doAdc:	mov	src1, 0(wr,dest)
+	add	src2, 0(wr,dest)
+	test	$2, 16(wr)
+	je	adcend
+	add	$1, 0(wr, dest)
+adcend:	mov	isPc(dest), rip
+
+doAdcs:	mov	src1, 0(wr, dest)
+	add	src2, 0(wr, dest)
+	test	$2, 16(wr)
+	je	adcends
+	add	$1, 0(wr, dest)
+	mov	ccr, 16(wr)
+adcends:mov	isPc(dest), rip
+
+doSub:	mov	src1, 0(wr,dest)
+	sub	src2, 0(wr,dest)
+	mov	isPc(dest), rip
+doSubs:	mov	src1, 0(wr,dest)
+	sub	src2, 0(wr, dest)
+	mov	ccr, 16(wr)		; save condition
+	mov	isPc(dest), rip
+
+doEor:	mov	src1, 0(wr,dest)
+	xor	src2, 0(wr,dest)
+	mov	isPc(dest), rip
+doEors:	mov	src1, 0(wr, dest)
+	xor	src2, 0(wr,dest)
+	mov	ccr, 16(wr)		; save condition bits
+	mov	isPc(dest), rip
+	
+doOrr:	mov	src1, 0(wr,dest)
+	or	src2, 0(wr,dest)
+	mov	isPc(dest), rip
+doOrrs:	mov	src1, 0(wr,dest)
+	or	src2, 0(wr,dest)
+	mov	ccr, 16(wr)
+	mov	isPc(dest), rip
+	
+doAnd:	mov	src1, 0(wr,dest)
+	and	src2, 0(wr,dest)
+	mov	isPc(dest), rip
+doAnds:	mov	src1, 0(wr, dest)
+	and	src2, 0(wr,dest)
+	mov	ccr, 16(wr)		; save condition bits
+	mov	isPc(dest), rip
+	
+doTst:	and	src1, src2
+	mov	ccr, 16(wr)		; save condition bits
+	mov	isPc(dest), rip
+
+doMul:	mov	src1, 0(wr,dest)
+	mul	src2, 0(wr,dest)
+	mov	isPc(dest), rip
+doMuls:	mov	src1, 0(wr, dest)
+	mul	src2, 0(wr, dest)
+	mov	ccr, 16(wr)
+	mov	isPc(dest), rip
+
+doCmp:	sub	src2, src1
+	mov	ccr, 16(wr)
+	mov	isPc(dest), rip
+	
+doDiv:	mov	src1, 0(wr,dest)
+	div	src2, 0(wr,dest)
+	mov	isPc(dest), rip
+doDivs:	mov	src1, 0(wr,dest)
+	div	src2, 0(wr,dest)
+	mov	ccr, 16(wr)
+	mov	isPc(dest),rip
+
+doMov:	mov	src2, 0(wr,dest)
+	mov	isPc(dest), rip
+doMovs:	and	src2, src2
+	mov	ccr, 16(wr)
+	mov	src2, 0(wr, dest)
+	mov	isPc(dest), rip
+	
+doMvn:	xor	$0xFFFFFFFF, src2
+	mov	src2, 0(wr,dest)
+	mov	isPc(dest), rip
+doMvns:	xor	$0xFFFFFFFF, src2
+	and	src2, src2
+	mov	ccr, 16(wr)
+	mov	src2, 0(wr, dest)
+	mov	isPc(dest), rip
+	
+	;; basically a switch statement on src2
+doSwi:	mov	0(wr), r0
+	trap	src2
+	mov	r0, 0(wr)
+	jmp	incPc
+doSwis:	mov	0(wr), r0
+	trap	src2
+	and	r0, r0
+	mov	ccr, 16(wr)
+	mov	r0, 0(wr)
+	jmp	incPc
+	
+	
+;;; ########################### L/S INSTRUCTIONS ########################################	
+;;; At this point it's assumed that we have
+;;; 	1) the index of the destination register (in dest)
+;;; 	2) the index of the base register (in r0), its value (in src1)
+;;; 	3) an operand or mask (in src2).
+;;; NOTE!! r0 is NOT a free register
+;;; just decriment r0 - no offset!!
+doStm:	add	$1, (wpcp)
+	mov 	0(wr, dest), r0
+	and	$0xFFFFFF, r0	;mask pointer?
+s15:	test 	$0b1000000000000000, src2
+	je	s14
+	mov	16(wr), r1
+	shl	$28, r1
+	mov 	15(wr), r3
+	or	r1, r3
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov 	r3, warm(r0)
+s14:	test	$0b0100000000000000, src2
+	je	s13
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	14(wr), warm(r0)
+s13:	test	$0b0010000000000000, src2
+	je	s12
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	13(wr), warm(r0)
+s12:	test	$0b0001000000000000, src2
+	je	s11
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	12(wr), warm(r0)
+s11:	test	$0b0000100000000000, src2
+	je	s10
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	11(wr), warm(r0)
+s10:	test	$0b0000010000000000, src2
+	je	s9
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	10(wr), warm(r0)
+s9:	test	$0b0000001000000000, src2
+	je	s8
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	9(wr), warm(r0)
+s8:	test	$0b0000000100000000, src2
+	je	s7
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	8(wr), warm(r0)
+s7:	test	$0b0000000010000000, src2
+	je	s6
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	7(wr), warm(r0)
+s6:	test	$0b0000000001000000, src2
+	je	s5
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	6(wr), warm(r0)
+s5:	test	$0b0000000000100000, src2
+	je	s4
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	5(wr), warm(r0)
+s4:	test	$0b0000000000010000, src2
+	je	s3
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	4(wr), warm(r0)
+s3:	test	$0b0000000000001000, src2
+v	je	s2
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	3(wr), warm(r0)
+s2:	test	$0b0000000000000100, src2
+	je	s1
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	2(wr), warm(r0)
+s1:	test	$0b0000000000000010, src2
+	je	s0
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	1(wr), warm(r0)
+s0:	test	$0b0000000000000001, src2
+	je	send
+	sub	$1, r0
+	and	$0xFFFFFF, r0
+	mov	0(wr), warm(r0)
+send:	mov	r0, 0(wr,dest)	
+	jmp 	loop
+	
+
+
+doLdm:	add	$1, (wpcp)
+	mov 	0(wr, dest), r0
+l0:	test	$0b0000000000000001, src2
+	je	l1
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 0(wr)
+	add	$1, r0
+l1:	test	$0b0000000000000010, src2
+	je	l2
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 1(wr)
+	add	$1, r0
+l2:	test	$0b0000000000000100, src2
+	je	l3
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 2(wr)
+	add	$1, r0
+l3:	test	$0b0000000000001000, src2
+	je	l4
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 3(wr)
+	add	$1, r0
+l4:	test	$0b0000000000010000, src2
+	je	l5
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 4(wr)
+	add	$1, r0
+l5:	test	$0b0000000000100000, src2
+	je	l6
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 5(wr)
+	add	$1, r0
+l6:	test	$0b0000000001000000, src2
+	je	l7
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 6(wr)
+	add	$1, r0
+l7:	test	$0b0000000010000000, src2
+	je	l8
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 7(wr)
+	add	$1, r0
+l8:	test	$0b0000000100000000, src2
+	je	l9
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 8(wr)
+	add	$1, r0
+l9:	test	$0b0000001000000000, src2
+	je	l10
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 9(wr)
+	add	$1, r0
+l10:	test	$0b0000010000000000, src2
+	je	l11
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 10(wr)
+	add	$1, r0
+l11:	test	$0b0000100000000000, src2
+	je	l12
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 11(wr)
+	add	$1, r0
+l12:	test	$0b0001000000000000, src2
+	je	l13
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 12(wr)
+	add	$1, r0
+l13:	test	$0b0010000000000000, src2
+	je	l14
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 13(wr)
+	add	$1, r0
+l14:	test	$0b0100000000000000, src2
+	je	l15
+	and	$0xFFFFFF, r0
+	mov	warm(r0), 14(wr)
+	add	$1, r0
+l15:	test 	$0b1000000000000000, src2
+ 	je	lend
+	and	$0xFFFFFF, r0	;mask pointer?
+ 	mov 	warm(r0), r3
+ 	mov	$0xF0000000, r1
+ 	and	r3, r1
+ 	shr	$28, r1
+ 	mov	r1, 16(wr)
+ 	mov	$0x0FFFFFFF, r1
+ 	and	r1, r3
+ 	mov 	r3, 15(wr)
+ 	add	$1, r0
+lend:	and 	$0xFFFFFF, r0
+	mov	r0, 0(wr, dest)
+	jmp	loop
+
+
+
+doLdr:	add	src1, src2
+	and	$0xFFFFFF, src2	;mask pointer?
+	mov	warm(src2), 0(wr, dest)
+	mov	isPc(dest), rip
+doLdrs:	add	src1, src2
+	and	$0xFFFFFF, src2
+	and	warm(src2), warm(src2)
+	mov	ccr, 16(wr)
+	mov	warm(src2), 0(wr, dest)
+	mov	isPc(dest), rip
+	
+doStr:	mov	0(wr, dest), r0
+	add	src1, src2
+	and	$0xFFFFFF, src2	;mask pointer?
+	mov 	r0, warm(src2)
+	mov	isPc(dest), rip
+doStrs:	mov	0(wr, dest), r0
+	and	r0, r0
+	mov	ccr, 16(wr)
+	add	src1, src2
+	and	$0xFFFFFF, src2	;mask pointer?
+	mov	r0, warm(src2)
+	mov	isPc(dest), rip
+
+	;; r0 contains index, src1 contains value
+	;; no compare, bits should be set
+doLdu:	jl	negLdu
+	add	$1, (wpcp)
+	and	$0xFFFFFF, src1	;mask pointer?
+	mov	warm(src1), 0(wr, dest)
+	add     src2, src1
+	and	$0xFFFFFF, src1
+	mov	src1, 0(wr, srci)
+	jmp	loop
+negLdu:	add	$1, (wpcp)
+	add	src2, src1
+	and	$0xFFFFFF, src1	;mask pointer?
+	mov	warm(src1), 0(wr, dest)
+	mov	src1, 0(wr, srci)
+	jmp	loop
+doLdus:	jl	negLdus
+	add	$1, (wpcp)
+	and	$0xFFFFFF, src1	;mask pointer?
+	and	warm(src1), warm(src1)
+	mov	ccr, 16(wr)
+	mov	warm(src1), 0(wr, dest) ;mask pointer?
+	add	src2, src1
+	and	$0xFFFFFF, src1
+	mov	src1, 0(wr, srci)
+	jmp	loop
+negLdus:add	$1, (wpcp)
+	add	src2, src1
+	and	$0xFFFFFF, src1	;mask pointer?
+	and	warm(src1), warm(src1)
+	mov	ccr, 16(wr)
+	mov	warm(src1), 0(wr,dest)
+	mov	src1, 0(wr, srci)
+	jmp	loop
+	
+doStu:	jl	negStu
+	and	$0xFFFFFF, src1	;mask pointer?
+	mov	0(wr, dest), warm(src1)
+	add	src2, src1
+	and	$0xFFFFFF, src1
+ 	mov	src1, 0(wr, srci)
+	mov	isPc(dest), rip
+negStu:	add	src2, src1
+	and	$0xFFFFFF, src1	;mask pointer?
+	mov	0(wr, dest), warm(src1)
+	mov     src1, 0(wr, srci)
+	mov	isPc(dest), rip
+
+doStus:	jl	negStus
+	and	$0xFFFFFF, src1	;mask pointer?
+	mov	0(wr, dest), warm(src1)
+	and	warm(src1), warm(src1)
+	mov	ccr, 16(wr)
+	add	src2, src1
+	and	$0xFFFFFF, src1
+	mov	src1, 0(wr, srci)
+	mov	isPc(dest), rip
+negStus:add	src2, src1
+	and	$0xFFFFFF, src1	;mask pointer?
+	mov	0(wr, dest), warm(src1)
+	and	warm(src1), warm(src1)
+	mov	ccr, 16(wr)
+	mov	src1, 0(wr, srci)
+	mov	isPc(dest), rip
+
+	;; We may need to mask this so that WARM pointers dont escape?
+doAdr:	add	src2, src1
+	and	$0xFFFFFF, src1	;mask pointer
+	mov	src1, 0(wr,dest)
+	mov	isPc(dest), rip
+
+
+;;; ########################### BRANCH INSTRUCTIONS ########################################
+;;; Assume nothing, grab the displacement
+	
+doB:	mov	warm(wpc), r0
+	and     $0b00000000111111111111111111111111, r0
+	add	r0, (wpcp)
+	jmp	loop
+
+	;; same as doB except load the link register first
+doBl:	mov	wpc, 14(wr)
+	add	$1, 14(wr)
+	mov	warm(wpc), r0
+	and	$0b00000000111111111111111111111111, r0
+	add	r0, (wpcp)
+ 	jmp	loop
+
+	
+;;; Virtual WARM registers
+wr0:	.data 	0
+wr1:	.data	0
+wr2:	.data	0
+wr3:	.data	0
+wr4:	.data	0
+wr5:	.data	0
+wr6:	.data	0
+wr7:	.data	0
+wr8:	.data	0
+wr9:	.data	0
+wr10:	.data	0
+wr11:	.data	0
+wr12:	.data	0
+wr13:	.data	0
+wr14:	.data	0
+wr15:	.data 	0
+wccr:	.data	0
+
+isPc:	.data	incPc,incPc,incPc,incPc,incPc,incPc,incPc,incPc,incPc,incPc,incPc,incPc,incPc,incPc,incPc,loop
+	
+
+;;; Load WARM program here
+warm:	.data 	0
+
+
+

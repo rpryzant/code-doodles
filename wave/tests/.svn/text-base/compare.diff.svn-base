@@ -1,0 +1,9 @@
+*** tests/compare.out	2013-11-28 00:17:52.000000000 -0500
+--- ./wave2.out	2013-11-28 00:17:52.000000000 -0500
+***************
+*** 1 ****
+! 111
+\ No newline at end of file
+--- 1 ----
+! 001
+\ No newline at end of file

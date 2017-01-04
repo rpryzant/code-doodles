@@ -1,0 +1,5 @@
+The fortune.as program reads messages from the input (one per line)
+and prints one of the fortunes with equal probability.
+
+Make sure you throw the seed switch (e.g. -S 13) to fix the random seed
+when comparing runs.

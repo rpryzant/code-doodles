@@ -1,0 +1,129 @@
+WarmObjectFile2
+File tests/compare.as
+Symbol SysEntropy 5
+Symbol SysGetChar 1
+Symbol SysGetNum 2
+Symbol SysHalt 0
+Symbol SysOverlay 6
+Symbol SysPLA 7
+Symbol SysPutChar 3
+Symbol SysPutNum 4
+Symbol eq 26
+Symbol gt 19
+Symbol lt 12
+Symbol main 0
+Symbol ne 33
+Symbol nv 5
+Register a1 0
+Register a2 1
+Register a3 2
+Register a4 3
+Register ccr 16
+Register fp 11
+Register lr 14
+Register pc 15
+Register r0 0
+Register r1 1
+Register r10 10
+Register r11 11
+Register r12 12
+Register r13 13
+Register r14 14
+Register r15 15
+Register r2 2
+Register r3 3
+Register r4 4
+Register r5 5
+Register r6 6
+Register r7 7
+Register r8 8
+Register r9 9
+Register sp 13
+Register v1 4
+Register v2 5
+Register v3 6
+Register v4 7
+Register v5 8
+Register v6 9
+Register v7 10
+Memory 0 5800000
+Memory 1 5880001
+Memory 2 11804040
+Memory 3 6c00001e
+Memory 4 2c000001
+Memory 5 5800000
+Memory 6 6800401
+Memory 7 5800000
+Memory 8 6800401
+Memory 9 5800001
+Memory a 6800401
+Memory b 6800000
+Memory c 5800001
+Memory d 6800401
+Memory e 5800000
+Memory f 6800401
+Memory 10 5800000
+Memory 11 6800401
+Memory 12 6800000
+Memory 13 5800001
+Memory 14 6800401
+Memory 15 5800001
+Memory 16 6800401
+Memory 17 5800001
+Memory 18 6800401
+Memory 19 6800000
+Memory 1a 5800000
+Memory 1b 6800401
+Memory 1c 5800001
+Memory 1d 6800401
+Memory 1e 5800000
+Memory 1f 6800401
+Memory 20 6800000
+Memory 21 5800000
+Memory 22 6800401
+Memory 23 5800001
+Memory 24 6800401
+Memory 25 5800001
+Memory 26 6800401
+Memory 27 6800000
+Source 0 main:   mov     r0, #0
+Source 1         mov     r1, #1
+Source 2         cmp     r0, r1
+Source 3         bne     ne              ; change this to check branching and conditions
+Source 4         bnv     nv
+Source 5 nv:     mov     r0, #0
+Source 6         swi     #SysPutNum
+Source 7         mov     r0, #0
+Source 8         swi     #SysPutNum
+Source 9         mov     r0, #1
+Source a         swi     #SysPutNum
+Source b         swi     #SysHalt
+Source c lt:     mov     r0, #1
+Source d         swi     #SysPutNum
+Source e         mov     r0, #0
+Source f         swi     #SysPutNum
+Source 10         mov     r0, #0
+Source 11         swi     #SysPutNum
+Source 12         swi     #SysHalt
+Source 13 gt:     mov     r0, #1
+Source 14         swi     #SysPutNum
+Source 15         mov     r0, #1
+Source 16         swi     #SysPutNum
+Source 17         mov     r0, #1
+Source 18         swi     #SysPutNum
+Source 19         swi     #SysHalt
+Source 1a eq:     mov     r0, #0
+Source 1b         swi     #SysPutNum
+Source 1c         mov     r0, #1
+Source 1d         swi     #SysPutNum
+Source 1e         mov     r0, #0
+Source 1f         swi     #SysPutNum
+Source 20         swi     #SysHalt
+Source 21 ne:     mov     r0, #0
+Source 22         swi     #SysPutNum
+Source 23         mov     r0, #1
+Source 24         swi     #SysPutNum
+Source 25         mov     r0, #1
+Source 26         swi     #SysPutNum
+Source 27         swi     #SysHalt
+End

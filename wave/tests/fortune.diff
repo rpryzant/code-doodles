@@ -1,0 +1,7 @@
+*** tests/fortune.out	2013-12-04 08:09:41.000000000 -0500
+--- ./wave2.out	2013-12-04 08:09:42.000000000 -0500
+***************
+*** 1 ****
+! A closed mouth gathers no feet.
+--- 1 ----
+! You will be swallowed by a cow.

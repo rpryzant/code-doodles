@@ -1,0 +1,5 @@
+This program is the basic test that must be passed at the end of phase 2.
+
+It tests most arithmetic instructions using a wide variety of addressing modes.
+It does not load memory and it does not branch.
+No instructions are conditional.

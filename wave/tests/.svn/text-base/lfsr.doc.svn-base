@@ -1,0 +1,2 @@
+Implements a linear feedback shift register on 8 bits.
+Prints the full orbit of the LFSR based on a seed found on input.

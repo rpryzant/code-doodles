@@ -1,0 +1,883 @@
+*** tests/clone2-documented.out	2013-12-03 12:57:41.000000000 -0500
+--- ./wave2.out	2013-12-03 12:57:51.000000000 -0500
+***************
+*** 1,380 ****
+! ;;; A clone program for the Great Class of 2010, by Duane.
+! ;;; The output of this program should be the same as the source.
+! x0:	adr	r0,[pc,#0x200]
+! x1:	bl	xe4
+! x2:	adr	r0,[pc,#0x235]
+! x3:	bl	xe4
+! x4:	adr	r2,[pc,#0x0fc]
+! x5:	adr	r1,[pc,#-5]
+! x6:	cmps	r1,r2,lsl#0
+! x7:	bge	x6d
+! x8:	ldr	r3,[r1,#0]
+! x9:	mov	r0,r1,lsl#0
+! xa:	bl	xa5
+! xb:	mov	r0,#0x3a
+! xc:	swi	#3
+! xd:	bl	x0fa
+! xe:	mov	r4,r3,lsr#23
+! x0f:	and	r4,r4,#0x1f
+! x10:	bl	x98
+! x11:	bl	x0fa
+! x12:	cmps	r4,#0x18
+! x13:	blt	x1a
+! x14:	mvn	r0,#-0x1000000
+! x15:	and	r0,r3,r0,lsl#0
+! x16:	mov	r0,r0,lsl#8
+! x17:	add	r0,r1,r0,asr#8
+! x18:	bl	xa5
+! x19:	b	x6a
+! x1a:	cmps	r4,#3
+! x1b:	beq	x24
+! x1c:	cmps	r4,#7
+! x1d:	beq	x24
+! x1e:	cmps	r4,#0xd
+! x1f:	beq	x24
+! x20:	mov	r0,r3,lsr#19
+! x21:	and	r0,r0,#0x0f
+! x22:	bl	xac
+! x23:	bl	x0fd
+! x24:	cmps	r4,#0xb
+! x25:	bge	x2a
+! x26:	mov	r0,r3,lsr#15
+! x27:	and	r0,r0,#0x0f
+! x28:	bl	xac
+! x29:	bl	x0fd
+! x2a:	cmps	r4,#0x10
+! x2b:	bge	x4e
+! x2c:	ands	r0,r3,#0x4000
+! x2d:	bne	x36
+! x2e:	mov	r0,#0x23
+! x2f:	swi	#3
+! x30:	and	r0,r3,#0x1ff
+! x31:	mov	r5,r3,lsr#9
+! x32:	and	r5,r5,#0x3f
+! x33:	mov	r0,r0,lsl r5
+! x34:	bl	xb0
+! x35:	b	x6a
+! x36:	mov	r0,r3,lsr#6
+! x37:	and	r0,r0,#0x0f
+! x38:	bl	xac
+! x39:	bl	x0fd
+! x3a:	mov	r5,r3,lsr#12
+! x3b:	ands	r5,r5,#3
+! x3c:	cmps	r5,#1
+! x3d:	bgt	x4b
+! x3e:	mov	r0,r3,lsr#10
+! x3f:	and	r0,r0,#3
+! x40:	ldr	r0,[r0,#0x128]
+! x41:	bl	x0f0
+! x42:	cmps	r5,#1
+! x43:	beq	x49
+! x44:	mov	r0,#0x23
+! x45:	swi	#3
+! x46:	and	r0,r3,#0x3f
+! x47:	bl	xd0
+! x48:	b	x6a
+! x49:	mov	r0,#0x20
+! x4a:	swi	#3
+! x4b:	ands	r0,r3,#0x0f
+! x4c:	bl	xac
+! x4d:	b	x6a
+! x4e:	mov	r0,#0x5b
+! x4f:	swi	#3
+! x50:	mov	r5,#0x0f
+! x51:	and	r0,r5,r3,lsr#15
+! x52:	bl	xac
+! x53:	bl	x0fd
+! x54:	ands	r0,r3,#0x4000
+! x55:	bne	x5c
+! x56:	mov	r0,#0x23
+! x57:	swi	#3
+! x58:	mov	r0,r3,lsl#18
+! x59:	mov	r0,r0,asr#18
+! x5a:	bl	xb0
+! x5b:	b	x68
+! x5c:	mov	r0,r3,lsr#6
+! x5d:	and	r0,r0,#0x0f
+! x5e:	bl	xac
+! x5f:	bl	x0fd
+! x60:	mov	r0,r3,lsr#10
+! x61:	and	r0,r0,#3
+! x62:	ldr	r0,[r0,#0x128]
+! x63:	bl	x0f0
+! x64:	mov	r0,#0x23
+! x65:	swi	#3
+! x66:	and	r0,r3,#0x1f
+! x67:	bl	xd0
+! x68:	mov	r0,#0x5d
+! x69:	swi	#3
+! x6a:	bl	x0f7
+! x6b:	add	r1,r1,#1
+! x6c:	b	x6
+! x6d:	adr	r0,[pc,#0x207]
+! x6e:	bl	xe4
+! x6f:	adr	r2,[pc,#0xcd]
+! x70:	cmps	r1,r2,lsl#0
+! x71:	bge	x7e
+! x72:	mov	r0,r1,lsl#0
+! x73:	bl	xa5
+! x74:	mov	r0,#0x3a
+! x75:	swi	#3
+! x76:	bl	x0fa
+! x77:	adr	r0,[pc,#0x17b]
+! x78:	bl	x0f0
+! x79:	bl	x0fa
+! x7a:	ldu	r0,[r1,#1]
+! x7b:	bl	xa5
+! x7c:	bl	x0f7
+! x7d:	b	x70
+! x7e:	adr	r0,[pc,#0x20a]
+! x7f:	bl	xe4
+! x80:	adr	r2,[pc,#0x21f]
+! x81:	cmps	r1,r2,lsl#0
+! x82:	bge	x95
+! x83:	mov	r0,r1,lsl#0
+! x84:	bl	xa5
+! x85:	mov	r0,#0x3a
+! x86:	swi	#3
+! x87:	bl	x0fa
+! x88:	adr	r0,[pc,#0x170]
+! x89:	bl	x0f0
+! x8a:	bl	x0fa
+! x8b:	mov	r0,#0x22
+! x8c:	swi	#3
+! x8d:	ldus	r0,[r1,#1]
+! x8e:	beq	x91
+! x8f:	swi	#3
+! x90:	b	x8d
+! x91:	mov	r0,#0x22
+! x92:	swi	#3
+! x93:	bl	x0f7
+! x94:	b	x81
+! x95:	adr	r0,[pc,#0x1fc]
+! x96:	bl	xe4
+! x97:	swi	#0
+! x98:	stu	lr,[sp,#-1]
+! x99:	stm	sp,#3
+! x9a:	ldr	r0,[r4,#0x100]
+! x9b:	bl	x0f0
+! x9c:	mov	r1,r3,lsr#29
+! x9d:	ldr	r0,[r1,#0x120]
+! x9e:	bl	x0f0
+! x9f:	ands	r1,r3,#0x10000000
+! xa0:	beq	xa3
+! xa1:	mov	r0,#0x73
+! xa2:	swi	#3
+! xa3:	ldm	sp,#3
+! xa4:	ldu	pc,[sp,#1]
+! xa5:	stu	lr,[sp,#-1]
+! xa6:	stu	r0,[sp,#-1]
+! xa7:	mov	r0,#0x78
+! xa8:	swi	#3
+! xa9:	ldu	r0,[sp,#1]
+! xaa:	bl	xc3
+! xab:	ldu	pc,[sp,#1]
+! xac:	stu	lr,[sp,#-1]
+! xad:	ldr	r0,[r0,#0x12c]
+! xae:	bl	x0f0
+! xaf:	ldu	pc,[sp,#1]
+! xb0:	stu	lr,[sp,#-1]
+! xb1:	cmps	r0,#0
+! xb2:	bge	xb7
+! xb3:	mvn	lr,r0,lsl#0
+! xb4:	mov	r0,#0x2d
+! xb5:	swi	#3
+! xb6:	add	r0,lr,#1
+! xb7:	cmps	r0,#0xa
+! xb8:	blt	xc1
+! xb9:	stu	r0,[sp,#-1]
+! xba:	mov	r0,#0x30
+! xbb:	swi	#3
+! xbc:	mov	r0,#0x78
+! xbd:	swi	#3
+! xbe:	ldu	r0,[sp,#1]
+! xbf:	bl	xc3
+! xc0:	b	xc2
+! xc1:	bl	xd0
+! xc2:	ldu	pc,[sp,#1]
+! xc3:	stu	lr,[sp,#-1]
+! xc4:	cmps	r0,#0x0f
+! xc5:	blt	xcb
+! xc6:	stu	r0,[sp,#-1]
+! xc7:	mov	r0,r0,lsr#4
+! xc8:	bl	xc3
+! xc9:	ldu	r0,[sp,#1]
+! xca:	and	r0,r0,#0x0f
+! xcb:	cmps	r0,#0xa
+! xcc:	addlt	r0,r0,#0x30
+! xcd:	addge	r0,r0,#0x57
+! xce:	swi	#3
+! xcf:	ldu	pc,[sp,#1]
+! xd0:	stu	lr,[sp,#-1]
+! xd1:	cmps	r0,#0
+! xd2:	bge	xd7
+! xd3:	mvn	lr,r0,lsl#0
+! xd4:	mov	r0,#0x2d
+! xd5:	swi	#3
+! xd6:	add	r0,lr,#1
+! xd7:	cmps	r0,#0xa
+! xd8:	blt	xe1
+! xd9:	stu	r0,[sp,#-1]
+! xda:	div	r0,r0,#0xa
+! xdb:	bl	xd0
+! xdc:	ldr	r0,[sp,#0]
+! xdd:	div	lr,r0,#0xa
+! xde:	mul	lr,lr,#0xa
+! xdf:	ldu	r0,[sp,#1]
+! xe0:	sub	r0,r0,lr,lsl#0
+! xe1:	add	r0,r0,#0x30
+! xe2:	swi	#3
+! xe3:	ldu	pc,[sp,#1]
+! xe4:	stu	lr,[sp,#-1]
+! xe5:	stu	r0,[sp,#-1]
+! xe6:	mov	r0,#0x3b
+! xe7:	swi	#3
+! xe8:	swi	#3
+! xe9:	swi	#3
+! xea:	mov	r0,#0x20
+! xeb:	swi	#3
+! xec:	ldu	r0,[sp,#1]
+! xed:	bl	x0f0
+! xee:	bl	x0f7
+! xef:	ldu	pc,[sp,#1]
+! x0f0:	stm	sp,#0x4800
+! x0f1:	mov	r11,r0,lsl#0
+! x0f2:	b	x0f4
+! x0f3:	swi	#3
+! x0f4:	ldus	r0,[r11,#1]
+! x0f5:	bne	x0f3
+! x0f6:	ldm	sp,#0x8800
+! x0f7:	mov	r0,#0xa
+! x0f8:	swi	#3
+! x0f9:	mov	pc,lr,lsl#0
+! x0fa:	mov	r0,#9
+! x0fb:	swi	#3
+! x0fc:	mov	pc,lr,lsl#0
+! x0fd:	mov	r0,#0x2c
+! x0fe:	swi	#3
+! x0ff:	mov	pc,lr,lsl#0
+! ;;; Tables of pointers.
+! x100:	.data	x195
+! x101:	.data	x199
+! x102:	.data	x19d
+! x103:	.data	x1a1
+! x104:	.data	x1a5
+! x105:	.data	x1a9
+! x106:	.data	x1ad
+! x107:	.data	x1b1
+! x108:	.data	x1b5
+! x109:	.data	x1b9
+! x10a:	.data	x1bd
+! x10b:	.data	x1c1
+! x10c:	.data	x1c5
+! x10d:	.data	x1c9
+! x10e:	.data	x1cd
+! x10f:	.data	x1d1
+! x110:	.data	x1d5
+! x111:	.data	x1d9
+! x112:	.data	x1dd
+! x113:	.data	x1e1
+! x114:	.data	x1e5
+! x115:	.data	x1ee
+! x116:	.data	x1ee
+! x117:	.data	x1ee
+! x118:	.data	x1e9
+! x119:	.data	x1e9
+! x11a:	.data	x1eb
+! x11b:	.data	x1eb
+! x11c:	.data	x1ee
+! x11d:	.data	x1ee
+! x11e:	.data	x1ee
+! x11f:	.data	x1ee
+! x120:	.data	x17f
+! x121:	.data	x180
+! x122:	.data	x183
+! x123:	.data	x186
+! x124:	.data	x189
+! x125:	.data	x18c
+! x126:	.data	x18f
+! x127:	.data	x192
+! x128:	.data	x16f
+! x129:	.data	x173
+! x12a:	.data	x177
+! x12b:	.data	x17b
+! x12c:	.data	x13c
+! x12d:	.data	x13f
+! x12e:	.data	x142
+! x12f:	.data	x145
+! x130:	.data	x148
+! x131:	.data	x14b
+! x132:	.data	x14e
+! x133:	.data	x151
+! x134:	.data	x154
+! x135:	.data	x157
+! x136:	.data	x15a
+! x137:	.data	x15e
+! x138:	.data	x162
+! x139:	.data	x166
+! x13a:	.data	x169
+! x13b:	.data	x16c
+! ;;; Strings.
+! x13c:	.string	"r0"
+! x13f:	.string	"r1"
+! x142:	.string	"r2"
+! x145:	.string	"r3"
+! x148:	.string	"r4"
+! x14b:	.string	"r5"
+! x14e:	.string	"r6"
+! x151:	.string	"r7"
+! x154:	.string	"r8"
+! x157:	.string	"r9"
+! x15a:	.string	"r10"
+! x15e:	.string	"r11"
+! x162:	.string	"r12"
+! x166:	.string	"sp"
+! x169:	.string	"lr"
+! x16c:	.string	"pc"
+! x16f:	.string	"lsl"
+! x173:	.string	"lsr"
+! x177:	.string	"asr"
+! x17b:	.string	"ror"
+! x17f:	.string	""
+! x180:	.string	"nv"
+! x183:	.string	"eq"
+! x186:	.string	"ne"
+! x189:	.string	"lt"
+! x18c:	.string	"le"
+! x18f:	.string	"ge"
+! x192:	.string	"gt"
+! x195:	.string	"add"
+! x199:	.string	"adc"
+! x19d:	.string	"sub"
+! x1a1:	.string	"cmp"
+! x1a5:	.string	"eor"
+! x1a9:	.string	"orr"
+! x1ad:	.string	"and"
+! x1b1:	.string	"tst"
+! x1b5:	.string	"mul"
+! x1b9:	.string	"mla"
+! x1bd:	.string	"div"
+! x1c1:	.string	"mov"
+! x1c5:	.string	"mvn"
+! x1c9:	.string	"swi"
+! x1cd:	.string	"ldm"
+! x1d1:	.string	"stm"
+! x1d5:	.string	"ldr"
+! x1d9:	.string	"str"
+! x1dd:	.string	"ldu"
+! x1e1:	.string	"stu"
+! x1e5:	.string	"adr"
+! x1e9:	.string	"b"
+! x1eb:	.string	"bl"
+! x1ee:	.string	"???"
+! x1f2:	.string	".data"
+! x1f8:	.string	".string"
+! x200:	.string	"A clone program for the Great Class of 2010, by Duane."
+! x237:	.string	"The output of this program should be the same as the source."
+! x274:	.string	"Tables of pointers."
+! x288:	.string	"Strings."
+! x291:	.string	"All told out."
+! ;;; All told out.
+--- 1,498 ----
+! ;;; A clone program for the Great Class of 2010, by Duane.;;; The output of this program should be the same as the source.x0:	adrs	r00,[pc0,#0x200]
+! x1:	blnvs	xe4
+! x2:	adreqs	r00,[pc0,#0x235]
+! x3:	blnes	xe4
+! x4:	adrlts	r20,[pc0,#0x0fc]
+! x5:	adrles	r10,[pc0,#-5]
+! x6:	cmpges	r10,r20,lsl#0
+! x7:	bgts	x6d
+! x8:	ldrlsls	r30,[r10,#0]
+! x9:	movlsrs	r00,r10,lsl#0
+! xa:	blasrs	xa5
+! xb:	movrors	r00,#0x3a
+! xc:	swir0s	#3
+! xd:	blr1s	x0fa
+! xe:	movr2s	r40,r30,lsr#23
+! x0f:	andr3s	r40,r40,#0x1f
+! x10:	blr4s	x98
+! x11:	blr5s	x0fa
+! x12:	cmpr6s	r40,#0x18
+! x13:	br7s	x1a
+! x14:	mvnr8s	r00,#-0x1000000
+! x15:	andr9s	r00,r30,r00,lsl#0
+! x16:	movr10s	r00,r00,lsl#8
+! x17:	addr11s	r00,r10,r00,asr#8
+! x18:	blr12s	xa5
+! x19:	bsps	x6a
+! x1a:	cmplrs	r40,#3
+! x1b:	bpcs	x24
+! x1c:	cmp@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r40,#7
+! x1d:	bI?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x24
+! x1e:	cmp c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r40,#0xd
+! x1f:	b@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x24
+! x20:	movI?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,lsr#19
+! x21:	and c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,#0x0f
+! x22:	bl@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xac
+! x23:	bl?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0fd
+! x24:	cmp c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r40,#0xb
+! x25:	b@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x2a
+! x26:	mov|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,lsr#15
+! x27:	and c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,#0x0f
+! x28:	bl@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xac
+! x29:	bl|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0fd
+! x2a:	cmp c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r40,#0x10
+! x2b:	b@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x4e
+! x2c:	and5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,#0x4000
+! x2d:	b c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x36
+! x2e:	mov@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x23
+! x2f:	swiFtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x30:	and c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,#0x1ff
+! x31:	mov@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r50,r30,lsr#9
+! x32:	andtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r50,r50,#0x3f
+! x33:	mov c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,lsl#5
+! x34:	bl@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xb0
+! x35:	btDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x6a
+! x36:	mov c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,lsr#6
+! x37:	and@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,#0x0f
+! x38:	blDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xac
+! x39:	bl c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0fd
+! x3a:	mov@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r50,r30,lsr#12
+! x3b:	andI?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r50,r50,#3
+! x3c:	cmpI?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r50,#1
+! x3d:	b c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x4b
+! x3e:	mov@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,lsr#10
+! x3f:	andI?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,#3
+! x40:	ldrI?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[r00,#0x128]
+! x41:	bl c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0f0
+! x42:	cmp@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r50,#1
+! x43:	bI?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x49
+! x44:	mov?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x23
+! x45:	swi c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x46:	and2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,#0x3f
+! x47:	bl @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xd0
+! x48:	b c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x6a
+! x49:	movvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x20
+! x4a:	swi@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x4b:	and c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,#0x0f
+! x4c:	bl @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xac
+! x4d:	b#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x6a
+! x4e:	mov c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x5b
+! x4f:	swivM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x50:	mov2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r50,#0x0f
+! x51:	andvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r50,r30,lsr#15
+! x52:	bl c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xac
+! x53:	blvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0fd
+! x54:	and2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,#0x4000
+! x55:	b@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x5c
+! x56:	mov c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x23
+! x57:	swi(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x58:	mov2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,lsl#18
+! x59:	mov@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,asr#18
+! x5a:	bl c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xb0
+! x5b:	b@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x68
+! x5c:	movM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,lsr#6
+! x5d:	and@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,#0x0f
+! x5e:	bl c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xac
+! x5f:	bl c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0fd
+! x60:	movvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,lsr#10
+! x61:	and{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,#3
+! x62:	ldr c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[r00,#0x128]
+! x63:	bli]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0f0
+! x64:	mov@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x23
+! x65:	swi c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x66:	andvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r30,#0x1f
+! x67:	bli]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xd0
+! x68:	mov c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x5d
+! x69:	swivM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x6a:	bl{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0f7
+! x6b:	add c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r10,r10,#1
+! x6c:	bvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x6
+! x6d:	adri]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[pc0,#0x207]
+! x6e:	bl c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xe4
+! x6f:	adri]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r20,[pc0,#0xcd]
+! x70:	cmpi]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r10,r20,lsl#0
+! x71:	b c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x7e
+! x72:	movi]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r10,lsl#0
+! x73:	bl{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xa5
+! x74:	mov c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x3a
+! x75:	swi(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x76:	bl#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0fa
+! x77:	adr#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[pc0,#0x17b]
+! x78:	bl c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0f0
+! x79:	bl(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0fa
+! x7a:	ldu#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[r10,#1]
+! x7b:	bl#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xa5
+! x7c:	bl c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0f7
+! x7d:	b2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x70
+! x7e:	adr{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[pc0,#0x20a]
+! x7f:	bl(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xe4
+! x80:	adr c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r20,[pc0,#0x21f]
+! x81:	cmp#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r10,r20,lsl#0
+! x82:	bvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x95
+! x83:	mov @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r10,lsl#0
+! x84:	bl c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xa5
+! x85:	movi]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x3a
+! x86:	swiM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x87:	bl@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0fa
+! x88:	adr c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[pc0,#0x170]
+! x89:	blM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0f0
+! x8a:	bl@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0fa
+! x8b:	mov@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x22
+! x8c:	swi c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x8d:	ldu(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[r10,#1]
+! x8e:	bvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x91
+! x8f:	swi#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x90:	b c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x8d
+! x91:	mov{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x22
+! x92:	swi2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! x93:	bl{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0f7
+! x94:	b c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x81
+! x95:	adrvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[pc0,#0x1fc]
+! x96:	bl{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xe4
+! x97:	swivM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#0
+! x98:	stu c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	lr0,[sp0,#-1]
+! x99:	stmvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	sp0,#3
+! x9a:	ldrvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[r40,#0x100]
+! x9b:	bl(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0f0
+! x9c:	mov c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r10,r30,lsr#29
+! x9d:	ldr#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[r10,#0x120]
+! x9e:	blvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0f0
+! x9f:	and{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r10,r30,#0x10000000
+! xa0:	b c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xa3
+! xa1:	movvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x73
+! xa2:	swiM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! xa3:	ldm{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	sp0,#3
+! xa4:	ldu c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	pc0,[sp0,#1]
+! xa5:	stuvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	lr0,[sp0,#-1]
+! xa6:	stu{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[sp0,#-1]
+! xa7:	movvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x78
+! xa8:	swi c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! xa9:	ldu2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[sp0,#1]
+! xaa:	bl{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xc3
+! xab:	lduvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	pc0,[sp0,#1]
+! xac:	stu c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	lr0,[sp0,#-1]
+! xad:	ldrvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[r00,#0x12c]
+! xae:	bl#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	x0f0
+! xaf:	lduvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	pc0,[sp0,#1]
+! xb0:	stu c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	lr0,[sp0,#-1]
+! xb1:	cmp2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0
+! xb2:	b{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xb7
+! xb3:	mvnvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	lr0,r00,lsl#0
+! xb4:	mov c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x2d
+! xb5:	swivM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! xb6:	add#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,lr0,#1
+! xb7:	cmp@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0xa
+! xb8:	b c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xc1
+! xb9:	stu2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[sp0,#-1]
+! xba:	mov{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x30
+! xbb:	swi@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! xbc:	mov c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x78
+! xbd:	swivM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! xbe:	ldu#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[sp0,#1]
+! xbf:	bl{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xc3
+! xc0:	b c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xc2
+! xc1:	bl2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xd0
+! xc2:	ldu{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	pc0,[sp0,#1]
+! xc3:	stu{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	lr0,[sp0,#-1]
+! xc4:	cmp c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x0f
+! xc5:	b(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xcb
+! xc6:	stu#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[sp0,#-1]
+! xc7:	mov@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,lsr#4
+! xc8:	bl c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xc3
+! xc9:	ldu(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[sp0,#1]
+! xca:	and c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,#0x0f
+! xcb:	cmp(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0xa
+! xcc:	addvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,#0x30
+! xcd:	add c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,#0x57
+! xce:	swi(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! xcf:	ldu(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	pc0,[sp0,#1]
+! xd0:	stu(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	lr0,[sp0,#-1]
+! xd1:	cmp c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0
+! xd2:	b#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xd7
+! xd3:	mvn#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	lr0,r00,lsl#0
+! xd4:	mov(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x2d
+! xd5:	swi{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! xd6:	add(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,lr0,#1
+! xd7:	cmp c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0xa
+! xd8:	b#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xe1
+! xd9:	stu2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[sp0,#-1]
+! xda:	div{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,#0xa
+! xdb:	bl@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	xd0
+! xdc:	ldrvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[sp0,#0]
+! xdd:	divvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	lr0,r00,#0xa
+! xde:	muli]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	lr0,lr0,#0xa
+! xdf:	ldu c5a|{ f @mWi Q	S
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[sp0,#1]
+! xe0:	sub/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,lr0,lsl#0
+! xe1:	addS
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,r00,#0x30
+! xe2:	swi#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! xe3:	lduvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	pc0,[sp0,#1]
+! xe4:	stuM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	lr0,[sp0,#-1]
+! xe5:	stuvM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,[sp0,#-1]
+! xe6:	movi]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x3b
+! xe7:	swiS
+! ZOT#	#I?|5FtDLJ(/#?	"`[OZ*#RVFNJ(#i]vM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! xe8:	swi @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! xe9:	swi@2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	#3
+! xea:	movM @2{x*{s
+! e @!spgp}dm|N  U] Rs,B  -	{W  -	u  ;		 ~ 	  !%)-159=AEIMQUY]aennniikknnnn 	osw{<?BEHKNQTWZ^bfilr0s	r00,#0x20

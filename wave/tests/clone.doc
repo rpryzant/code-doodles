@@ -1,0 +1,9 @@
+The clone series of programs disassemble themselves and print
+themselves out.  They're quines.
+
+clone.as is a series of instructions, written as data statements.
+When executed, it prints itself out.
+You can use diff to verify this fact.
+
+clone2.as is a disassembler quine.  It prints itself out.
+clone2-documented.as is a human-readable version.
