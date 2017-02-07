@@ -24,7 +24,7 @@ AVFormatContext* format_context;
 AVStream* video_stream;
 size_t frame_width;
 size_t frame_height;
-AVFrame* frame;
+AVFrame* frame_container;
 int video_stream_index;
 
 
@@ -33,7 +33,7 @@ void initialize_ffmpeg(char *video_path) {
     av_register_all();
 
     // set up empty container frame/context to parse into
-    frame = av_frame_alloc();                      // https://www.ffmpeg.org/doxygen/2.7/structAVFrame.html
+    frame_container = av_frame_alloc();                      // https://www.ffmpeg.org/doxygen/2.7/structAVFrame.html
     format_context = avformat_alloc_context();     // https://ffmpeg.org/doxygen/2.7/structAVFormatContext.html
     video_stream_index = -1;
 
@@ -72,35 +72,63 @@ void initialize_ffmpeg(char *video_path) {
 
 
 
+bool process_frame(AVPacket *packet) {
+    av_frame_unref(frame_container);            // reset frame fields
 
-void read_frame(int64_t& num_vectors, char& frame_type, vector<AVMotionVector>& vectors) {
-    // read data packets
+    int got_frame = 0;
+    // try to decode video frame into the frame container
+    int ret_val = avcodec_decode_video2(video_stream->codec, frame_container, &got_frame, packet);
+    // ret_val is neg if error, else num bytes used, else 0 if frame couldn't be decompressed
+    if (ret_val < 0)
+	return false;
+    // TODO THE FFMIN THING?
+    packet->data += ret_val;
+    packet->size -= ret_val;
+    return got_frame > 0;
+}
+
+
+void read_next_packet() {
     static bool initialized = false;
     static AVPacket packet;
     static AVPacket packet_cp;
 
     // keep reading in packets until you get a full video frame
     while (true) {
-
 	if (initialized) {
 	    // if you've read a frame into the packet, verify that you can extract info from it
 	    if (process_frame(&packet_cp)) {
 		return true;
-	    // otherwise start over
+	    // otherwise start over from the top
 	    } else {
 		av_free_packet(&packet);
 		initialized = false;
+		continue;
 	    }
 	}
-	// TODO CONTINUE WORKING ON THIS PART
+	// if uninitialized, try to read a frame into the packet 
+	int ret = av_read_frame(format_context, &packet);
+	// if reading it didn't work return false TODO STRUCTURE DIFFERENTLY?
+	if (ret < 0)
+	    return false;
+	// if we're somehow at the wrong index, start over
+	if (packet.stream_index != video_stream_index) {
+	    av_free_packet(&packet);
+	    continue;
+	}
+	// otherwise set initialized to true and copy the packet
+	initialized = true;
+	packet_cp = packet;
     }
+}    
+    
 
+bool read_frame(int64_t &timestamp, char &frame_type, vector<AVMotionVector> &vectors) {
+    if (!read_next_packet) 
+	return false;
 
-
-
-}
-
-
+    // TODO REST OF THIS
+} 
 
 
 
@@ -109,12 +137,17 @@ int main(int argc, const char* argv[]) {
     char *VIDEO_PATH = argv[1];
     initialize_ffmpeg(VIDEO_PATH);
 
-    int64_t num_vectors = -1;
-    int64_t prev_num_vectors = -1;
+    int64_t timestamp = -1;
+    int64_t prev_timestamp = -1;
     char frame_type;
     vector<AVMotionVector> vectors;
 
-    for (int frame_i = 1; read_frame(num_vectors, frame_type, vectors); frame_i++) {
+    for (int frame_i = 1; read_frame(timestamp, frame_type, vectors); frame_i++) {
+	if (timestamp <= prev_timestamp && prev_timestamp != -1) {
+	    fprintf(stderr, "frame %d skipped -- timestamp: %d, prev timestamp: %d\n", int(frame_i), int(timestamp), int(prev_timestamp));
+	    continue;
+	}
+	/// TODO REST OF HERE 
 
     }
 
