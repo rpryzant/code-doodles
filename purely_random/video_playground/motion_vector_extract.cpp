@@ -127,8 +127,41 @@ bool read_frame(int64_t &timestamp, char &frame_type, vector<AVMotionVector> &ve
     if (!read_next_packet) 
 	return false;
 
-    // TODO REST OF THIS
+    frame_type = av_get_picture_type_char(frame_container->pict_type);           // get frame type ("I", "P", "B", etc.) from
+                                                                                 // whatever's in global frame container 
+                                                                                 // (that should be the current frame)
+    // search frame for valid timestamp, if none exists, increment current timestamp
+    if (frame_container->pkt_pts != AV_NOPTS_VALUE) {
+	timestamp = frame_container->pkt_pts;
+    } else if (frame_containter->pkt_dts != AV_NOPTS_VALUE) {
+	timestamp = frame_container->pkt_dts;
+    } else {
+	timestamp = timestamp + 1;
+    }
+    
+    AVFrameSideData* side_data = av_frame_get_side_data(frame_container, AV_FRAME_DATA_MOTION_VECTORS);
+    if (side_data != NULL) {
+	AVMotionVector* motion_vecs = (AVMotionVector*)side_data->data;
+	int num_vecs = side_data->size / sizeof(AVMotionVector);
+	vectors = vector<AVMotionVetor>(motion_vecs, motion_vecs + num_vecs);
+    } else {
+	vectors = vector<AVMotionVector>();
+    }
+
+    return true;
 } 
+
+void print_vectors(int frame_i, int64_t timestamp, char frame_type, vector<AVMotionVector>& vectors) {
+    printf("# ts=%lld frame_i=%d frame_type=%c shape=%zux4\n", timestamp, frame_i, frame_type, vectors.size());
+    int dx, dy;
+    for (int i = 0; i < vectors.size(); i++) {
+	AVMotionVector& v = vectors[i];
+	dx = v.dst_x - v.src_x;
+	dy = v.dst_y - v.src_y;
+	printf("%d\t%d\t%d\t%d\n", v.dst_x, v.dst_y, dx, dy);
+    }
+
+}
 
 
 
@@ -147,7 +180,10 @@ int main(int argc, const char* argv[]) {
 	    fprintf(stderr, "frame %d skipped -- timestamp: %d, prev timestamp: %d\n", int(frame_i), int(timestamp), int(prev_timestamp));
 	    continue;
 	}
-	/// TODO REST OF HERE 
+	
+	print_vectors(frame_i, timestamp, frame_type, vectors);
+
+	prev_timestamp = timestamp;
 
     }
 
