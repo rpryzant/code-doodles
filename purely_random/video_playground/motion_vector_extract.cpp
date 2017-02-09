@@ -3,10 +3,6 @@
 #include <cstdlib>
 #include <ctime>
 #include <stdint.h>
-#include <string>
-#include <algorithm>
-#include <vector>
-#include <stdexcept>
 
 extern "C"
 {
@@ -16,9 +12,13 @@ extern "C"
 #include <libavutil/motion_vector.h>
 }
 
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <stdexcept>
 
 
-
+using namespace std;   // bad c++ practice but meh
 
 AVFormatContext* format_context;
 AVStream* video_stream;
@@ -26,9 +26,9 @@ size_t frame_width;
 size_t frame_height;
 AVFrame* frame_container;
 int video_stream_index;
+const char *VIDEO_PATH;
 
-
-void initialize_ffmpeg(char *video_path) {
+void initialize_ffmpeg() {
     // Initializes libavformat and registers all the muxers, demuxers and protocols
     av_register_all();
 
@@ -37,8 +37,9 @@ void initialize_ffmpeg(char *video_path) {
     format_context = avformat_alloc_context();     // https://ffmpeg.org/doxygen/2.7/structAVFormatContext.html
     video_stream_index = -1;
 
+    int e = 0;
     // try to open input file
-    if ((e = avformat_open_input(&format_context, video_path, NULL, NULL)) != 0)
+    if ((e = avformat_open_input(&format_context, VIDEO_PATH, NULL, NULL)) != 0)
 	throw std::runtime_error("Couldn't open file!");
 
     // verify that input is video stream
@@ -88,7 +89,7 @@ bool process_frame(AVPacket *packet) {
 }
 
 
-void read_next_packet() {
+bool read_next_packet() {
     static bool initialized = false;
     static AVPacket packet;
     static AVPacket packet_cp;
@@ -98,7 +99,7 @@ void read_next_packet() {
 	if (initialized) {
 	    // if you've read a frame into the packet, verify that you can extract info from it
 	    if (process_frame(&packet_cp)) {
-		return true;
+                return true;
 	    // otherwise start over from the top
 	    } else {
 		av_free_packet(&packet);
@@ -110,7 +111,7 @@ void read_next_packet() {
 	int ret = av_read_frame(format_context, &packet);
 	// if reading it didn't work return false TODO STRUCTURE DIFFERENTLY?
 	if (ret < 0)
-	    return false;
+	  return false;
 	// if we're somehow at the wrong index, start over
 	if (packet.stream_index != video_stream_index) {
 	    av_free_packet(&packet);
@@ -124,8 +125,8 @@ void read_next_packet() {
     
 
 bool read_frame(int64_t &timestamp, char &frame_type, vector<AVMotionVector> &vectors) {
-    if (!read_next_packet) 
-	return false;
+    if (!read_next_packet()) 
+      return false;
 
     frame_type = av_get_picture_type_char(frame_container->pict_type);           // get frame type ("I", "P", "B", etc.) from
                                                                                  // whatever's in global frame container 
@@ -133,7 +134,7 @@ bool read_frame(int64_t &timestamp, char &frame_type, vector<AVMotionVector> &ve
     // search frame for valid timestamp, if none exists, increment current timestamp
     if (frame_container->pkt_pts != AV_NOPTS_VALUE) {
 	timestamp = frame_container->pkt_pts;
-    } else if (frame_containter->pkt_dts != AV_NOPTS_VALUE) {
+    } else if (frame_container->pkt_dts != AV_NOPTS_VALUE) {
 	timestamp = frame_container->pkt_dts;
     } else {
 	timestamp = timestamp + 1;
@@ -143,7 +144,7 @@ bool read_frame(int64_t &timestamp, char &frame_type, vector<AVMotionVector> &ve
     if (side_data != NULL) {
 	AVMotionVector* motion_vecs = (AVMotionVector*)side_data->data;
 	int num_vecs = side_data->size / sizeof(AVMotionVector);
-	vectors = vector<AVMotionVetor>(motion_vecs, motion_vecs + num_vecs);
+	vectors = vector<AVMotionVector>(motion_vecs, motion_vecs + num_vecs);
     } else {
 	vectors = vector<AVMotionVector>();
     }
@@ -152,7 +153,7 @@ bool read_frame(int64_t &timestamp, char &frame_type, vector<AVMotionVector> &ve
 } 
 
 void print_vectors(int frame_i, int64_t timestamp, char frame_type, vector<AVMotionVector>& vectors) {
-    printf("# ts=%lld frame_i=%d frame_type=%c shape=%zux4\n", timestamp, frame_i, frame_type, vectors.size());
+    printf("# ts=%ld frame_i=%d frame_type=%c shape=%zux4\n", timestamp, frame_i, frame_type, vectors.size());
     int dx, dy;
     for (int i = 0; i < vectors.size(); i++) {
 	AVMotionVector& v = vectors[i];
@@ -167,8 +168,8 @@ void print_vectors(int frame_i, int64_t timestamp, char frame_type, vector<AVMot
 
 int main(int argc, const char* argv[]) {
     // get arg path
-    char *VIDEO_PATH = argv[1];
-    initialize_ffmpeg(VIDEO_PATH);
+    VIDEO_PATH = argv[1];
+    initialize_ffmpeg();
 
     int64_t timestamp = -1;
     int64_t prev_timestamp = -1;
