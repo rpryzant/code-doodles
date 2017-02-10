@@ -22,12 +22,17 @@ using namespace std;   // bad c++ practice but meh
 
 AVFormatContext* format_context;
 AVStream* video_stream;
-size_t frame_width;
-size_t frame_height;
 AVFrame* frame_container;
 int video_stream_index;
 const char *VIDEO_PATH;
 
+
+/*
+ * Initialize ffmpeg connection
+ *   - open up input file and video streams into format_context
+ *   - get primary video stream into video_stream
+ *   - allocate an empty container for frame_container
+ */
 void initialize_ffmpeg() {
     // Initializes libavformat and registers all the muxers, demuxers and protocols
     av_register_all();
@@ -40,11 +45,11 @@ void initialize_ffmpeg() {
     int e = 0;
     // try to open input file
     if ((e = avformat_open_input(&format_context, VIDEO_PATH, NULL, NULL)) != 0)
-	throw std::runtime_error("Couldn't open file!");
+      throw std::runtime_error("Couldn't open file!");
 
     // verify that input is video stream
     if ((e = avformat_find_stream_info(format_context, NULL)) < 0)
-	throw std::runtime_error("Couldn't find stream info!");
+          throw std::runtime_error("Couldn't find stream info!");
 
     for (int i = 0; i < format_context->nb_streams; i++) {
 	AVCodecContext *codec = format_context->streams[i]->codec;
@@ -60,47 +65,53 @@ void initialize_ffmpeg() {
 
 	    video_stream_index = i;                          // remember index where video stream starts
 	    video_stream = format_context->streams[i];     // remember this stream as primary video stream
-	    frame_width = codec->width;                      // get frame width & height
-	    frame_height = codec->height;
 
 	    break;
 	}
     }
 
     if (video_stream_index == -1)
-	throw std::runtime_error("ffmpeg failed to initialize -- video stream info not found!");
+    	throw std::runtime_error("ffmpeg failed to initialize -- video stream info not found!");
 }
 
 
-
-bool process_frame(AVPacket *packet) {
+/*
+ * Given a packet, decode the video frame in packet->data to 
+ *   our empty frame container
+ */
+bool decode_packet_into_frame(AVPacket *packet) {
     av_frame_unref(frame_container);            // reset frame fields
 
     int got_frame = 0;
+
     // try to decode video frame into the frame container
     int ret_val = avcodec_decode_video2(video_stream->codec, frame_container, &got_frame, packet);
+
     // ret_val is neg if error, else num bytes used, else 0 if frame couldn't be decompressed
     if (ret_val < 0)
 	return false;
-    // TODO THE FFMIN THING?
+
     packet->data += ret_val;
     packet->size -= ret_val;
     return got_frame > 0;
 }
 
 
+/*
+ * Loop through frames until you get to one you can decode, then read that 
+ *  frame into a packet and decode it into our frame_container
+ */
 bool read_next_packet() {
     static bool initialized = false;
     static AVPacket packet;
-    static AVPacket packet_cp;
 
     // keep reading in packets until you get a full video frame
     while (true) {
 	if (initialized) {
-	    // if you've read a frame into the packet, verify that you can extract info from it
-	    if (process_frame(&packet_cp)) {
+	    // if you've read a frame into the packet, decode it into the frame_container
+	    if (decode_packet_into_frame(&packet)) {
                 return true;
-	    // otherwise start over from the top
+	    // if packet decoding broke, start over from the top
 	    } else {
 		av_free_packet(&packet);
 		initialized = false;
@@ -119,12 +130,13 @@ bool read_next_packet() {
 	}
 	// otherwise set initialized to true and copy the packet
 	initialized = true;
-	packet_cp = packet;
     }
 }    
     
-
-bool read_frame(int64_t &timestamp, char &frame_type, vector<AVMotionVector> &vectors) {
+/*
+ *  Read the next frame into frame_container, then pull out motion vectors
+ */
+bool read_next_vectors(int64_t &timestamp, char &frame_type, vector<AVMotionVector> &vectors) {
     if (!read_next_packet()) 
       return false;
 
@@ -152,16 +164,22 @@ bool read_frame(int64_t &timestamp, char &frame_type, vector<AVMotionVector> &ve
     return true;
 } 
 
+
+/*
+ * Print all the vectors in a frame as a csv
+ *   format: 
+ *           #HEADER
+ *           x,y,dx,dy
+ */
 void print_vectors(int frame_i, int64_t timestamp, char frame_type, vector<AVMotionVector>& vectors) {
-    printf("# ts=%ld frame_i=%d frame_type=%c shape=%zux4\n", timestamp, frame_i, frame_type, vectors.size());
+    printf("#ts=%ld,frame_i=%d,frame_type=%c,shape=%zux4\n", timestamp, frame_i, frame_type, vectors.size());
     int dx, dy;
     for (int i = 0; i < vectors.size(); i++) {
 	AVMotionVector& v = vectors[i];
 	dx = v.dst_x - v.src_x;
 	dy = v.dst_y - v.src_y;
-	printf("%d\t%d\t%d\t%d\n", v.dst_x, v.dst_y, dx, dy);
+	printf("%d,%d,%d,%d\n", v.dst_x, v.dst_y, dx, dy);
     }
-
 }
 
 
@@ -176,7 +194,7 @@ int main(int argc, const char* argv[]) {
     char frame_type;
     vector<AVMotionVector> vectors;
 
-    for (int frame_i = 1; read_frame(timestamp, frame_type, vectors); frame_i++) {
+    for (int frame_i = 1; read_next_vectors(timestamp, frame_type, vectors); frame_i++) {
 	if (timestamp <= prev_timestamp && prev_timestamp != -1) {
 	    fprintf(stderr, "frame %d skipped -- timestamp: %d, prev timestamp: %d\n", int(frame_i), int(timestamp), int(prev_timestamp));
 	    continue;
