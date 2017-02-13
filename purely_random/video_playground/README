@@ -1,0 +1,12 @@
+
+=== TO INSTALL
+
+cd dependancies
+./install_dependancies.sh
+cd ../
+make extractor
+
+
+=== TO RUN
+./extractor [VIDEO FILE]
+
