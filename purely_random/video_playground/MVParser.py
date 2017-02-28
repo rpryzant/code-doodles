@@ -13,8 +13,9 @@ import os
 import sys
 import re
 import cv2
+from collections import defaultdict
 
-class MVParser(object):
+class VideoParser(object):
     """ class that provides interface for parsing & accessing motion vectors from a video
     """
 
@@ -24,20 +25,26 @@ class MVParser(object):
         self.extractor = extractor_path
         self.video = video_path
 
-        self.frame_summaries = self.extract_mvs(extractor_path, video_path)
+        frame_mvs = self.extract_mvs(extractor_path, video_path)
+        frame_images = self.extract_frames(video_path)
+
+        self.frames = {i: {
+            'motion_vector': frame_mvs[i],
+            'image': frame_images[i]
+            } for i in range(len(frame_images)) }
 
 
     def iter_frames(self):
-        for i in range(1, self.num_frames() + 1):
-            yield self.frame_vector_mapping[i]
+        for i in range(1, self.num_frames()):
+            yield self.frames[i]
 
 
     def num_frames(self):
-        return len(self.frame_vector_mapping)
+        return len(self.frames)
 
 
-    def frame_info(self, i):
-        return self.frame_vector_mapping[i]
+    def get_frame(self, i):
+        return self.frames[i]
 
 
     def get_video_dimensions(self, video):
@@ -47,10 +54,25 @@ class MVParser(object):
         return width, height    
 
 
+    def extract_frames(self, video):
+        def iter_frames(video):
+            capture = cv2.VideoCapture(video)
+            r, f = capture.read()
+            while r:
+                yield f
+                r, f = capture.read()
+        out = []
+        for frame in iter_frames(video):
+            out.append(np.transpose(frame, [1, 0, 2]))
+        return out
+
+
     def extract_mvs(self, extractor, video):
         extractor_output = os.popen('./%s %s' % (extractor, video)).read()
         frames = extractor_output.split('#')
-        out = {}
+
+        out = defaultdict(lambda: {'ts':-1, 'num': -1, 'vectors': np.zeros([self.w, self.h, 2])})
+
         for frame in frames:
             if not frame: continue
             ts, frame_i, frame_type, vector_count, vectors = self.parse_frame(frame)
@@ -84,5 +106,5 @@ class MVParser(object):
 
 
 if __name__ == "__main__":
-    mvp = MVParser(sys.argv[1], sys.argv[2])
-
+    mvp = VideoParser(sys.argv[1], sys.argv[2])
+    a = mvp.get_frame(300)
