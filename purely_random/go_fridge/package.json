@@ -1,0 +1,9 @@
+{
+  "name": "qc-fridge",
+  "version": "1.0.0",
+  "description": "Fridge viewing for QC",
+  "dependencies": {
+    "jade": "^1.11.0"
+  },
+  "homepage": "https://bitbucket.org/noahgoldman/qc-fridge#readme"
+}
