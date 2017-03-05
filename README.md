@@ -1,20 +1,3 @@
-todo mention openess, https://speakerdeck.com/jakevdp/in-defense-of-extreme-openness
+# Description
 
-
-
-This repo is full of the random bits of code I write. 
-
-things i'd like to do:
-* rmsprop, relu, batch norm, lstm, gru
-* tensorflow stuff
-  * translation!!
-  * image de-shittifier!!
-* string addition
-* string multiplication
-* string division (long division)
-* more base conversion methods
-* decimal to hex and visa versa
-* linear algebra
-  * change of basis
-  * JPEG compresion
-  * projection
+Doodling is a great habit for writers and artists. Programmers are no different! Inspired by [[this talk]](https://speakerdeck.com/jakevdp/in-defense-of-extreme-openness), I've decided to keep all the uncategorized "code doodles" I write in this repository.
