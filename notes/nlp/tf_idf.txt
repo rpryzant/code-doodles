@@ -1,0 +1,28 @@
+==== TF-IDF
+
+=== OVERVIEW
+- means "term frequency-inverse document frequency"
+- evals how important a word is to a document in a collection/corpus
+- importance goes up with document frequency, but offset by corpus frequency
+
+
+=== HOW TO COMPUTE
+
+- 2 parts:
+    1) Term Frequency (TF): how frequently a term occurs in a document. Normalized by doc length
+
+         TF(t) = (# occurances of t in the document) / (# terms in the document)
+
+    2) Inverse Document Frequency (IDF): how important a term is on a global basis. downweights
+        stuff like "is" and "of
+
+       	 IDF(t) = log(  # documents  /  # documents with t in it )
+
+
+- then the TF-IDF score of a query is 
+      
+         ****  TF(t) * IDF(t)   ******
+
+
+
+
