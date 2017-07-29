@@ -8,7 +8,10 @@ class BaseModel(object):
                  iterator, 
                  src_vocab_table, 
                  tgt_vocab_table,
-                 mode):
+                 mode,
+                 reverse_tgt_vocab_table=None):
+        if mode == "inference":
+            assert reverse_tgt_vocab_table is not None
 
         self.iterator = iterator
         self.config = config
@@ -32,9 +35,12 @@ class BaseModel(object):
         # make embeddings
         self.encoder_embeddings, self.decoder_embeddings = self.make_embeddings()
         # make graph
-        self.loss, self.logits = self.build_graph(self)
+        self.loss, self.logits, self.sample_ids = self.build_graph()
+        if self.mode == 'inference':
+            self.sample_words = reverse_tgt_vocab_table.lookup(
+                tf.to_int64(self.sample_ids))
         # make training op
-        self.train_op = self._make_training_op(self)
+        self.train_op = self._make_training_op()
 
         # tf boilerplate
         self.summaries = tf.summary.merge_all()
@@ -59,10 +65,10 @@ class BaseModel(object):
         with tf.variable_scope("encoder"):
             encoder_outputs, encoder_state = self._build_encoder()
         with tf.variable_scope("decoder"):
-            logits = self._build_decoder(encoder_outputs, encoder_state)
+            logits, sample_ids = self._build_decoder(encoder_outputs, encoder_state)
         with tf.variable_scope("loss"):
             loss = self._compute_loss(logits)
-        return loss, logits
+        return loss, logits, sample_ids
 
     @abc.abstractmethod
     def _build_encoder(self):
@@ -70,8 +76,84 @@ class BaseModel(object):
 
 
     @abc.abstractmethod
-    def _build_decoder(self, encoder_outputs, encoder_state):
+    def _build_decoder_cell(self, encoder_outputs, encoder_state):
         pass
+
+
+    def _build_decoder(self, encoder_outputs, encoder_state):
+
+
+        output_layer = layers_core.Dense(
+            self.config.tgt_vocab_sizem use_bias=False, name="out_projection")
+
+        cell, initial_state = self._build_decoder_cell(
+            encoder_outputs, encoder_state)
+
+        # train or eval (argmax)
+        if self.mode != 'inference':
+            target_input = iterator.target_input
+            target_embeddings = tf.nn.embedding_lookup(
+                self.decoder_embeddings, target_input)
+            # argmax sampler
+            sampler = tf.contrib.seq2seq.TrainingHelper(
+                target_embeddings, self.iterator.target_sequence_length)
+
+            decoder = tf.contrib.seq2seq.BasicDecoder(
+                cell, sampler, initial_state)
+            outputs, final_context_state, _ = tf.contrib.seq2seq.dynamic_decode(
+                decoder, swap_memory=True)  # move tensors to cpu after computation, avoid memory issues on long seqs
+
+            # applying projection all at once is faster than 
+            #    the per-timestep behavior in inference
+            logits = output_layer(outputs.rnn_output)
+            sample_ids = outputs.sample_id
+
+        # Inference (beam search)
+        else:
+            tgt_sos_id = tf.cast(tf.tgt_vocab_table.lookup(tf.constant(self.config.sos)),
+                                 tf.int32)
+            tgt_eos_id = tf.cast(tf.tgt_vocab_table.lookup(tf.constant(self.config.eos)),
+                                 tf.int32)
+            beam_width = self.config.beam_width
+            length_penalty_weight = self.config.length_penalty_weight
+            start_tokens = tf.fill([self.batch_size], tgt_sos_id)
+            end_token = tgt_eos_id
+
+            # max decoding steps
+            decoding_length_factor = 2.0
+            max_encoder_length = tf.reduce_max(iterator.source_sequence_length)
+            maximum_iterations = tf.to_int32(tf.round(
+                tf.to_float(max_encoder_length) * decoding_length_factor))
+
+            if beam_width > 0:
+                decoder = tf.contrib.seq2seq.BeamSearchDecoder(
+                    cell=cell,
+                    embedding=self.decoder_embeddings,
+                    start_tokens=start_tokens,
+                    end_token=end_token,
+                    initial_state=initial_state,
+                    beam_width=beam_width,
+                    output_layer=output_layer,
+                    length_penalty_weight=length_penalty_weight)
+            else:
+                # inference argmax sampler
+                sampler = tf.contrib.seq2seq.GreedyEmbeddingHelper(
+                    self.embedding_decoder, start_tokens, end_token)
+                decoder = tf.contrib.seq2seq.BasicDecoder(
+                    cell, sampler, initial_state, output_layer=output_layer)
+
+            outputs, final_context_state, _ = tf.contrib.seq2seq.dynamic_decode(
+                decoder, maximum_iterations=maximum_iterations, swap_memory=True)
+
+            if beam_width > 0:
+                logits = tf.no_op()
+                sample_ids = outputs.predicted_ids
+            else:
+                logits = outputs.rnn_output  # already projected
+                sample_id = outputs.sample_id
+
+            return logits, sample_ids
+
 
 
     def _compute_loss(self, logits):
@@ -113,9 +195,9 @@ class BaseModel(object):
             cell = tf.contrib.rnn.BasicLSTMCell(
                 self.config.num_units, forget_bias=self.config.forget_bias)
 
-            if mode == 'train':
-                cell = tf.contrib.rnn.DropoutWrapper(
-                    cell = cell, input_keep_prob=(1.0 - self.config.dropout))
+            dropout = self.config.dropout if self.mode == "train" else 0.0
+            cell = tf.contrib.rnn.DropoutWrapper(
+                cell = cell, input_keep_prob=(1.0 - dropout))
 
             return cell
 

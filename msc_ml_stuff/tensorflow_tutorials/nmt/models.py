@@ -2,7 +2,7 @@
 
 
 
-class Model(BaseModel):
+class VanillaModel(BaseModel):
 
     def _build_encoder(self):
         source_embedded = tf.nn.embedding_lookup(
@@ -22,4 +22,13 @@ class Model(BaseModel):
         return outputs, encoder_state
 
 
+    def _build_decoder_cell(self, encoder_outputs, encoder_state):
+        cell = self._build_rnn_cell()
 
+        if self.mode == "inference" and self.config.beam_width > 0:
+            initial_state = tf.contrib.seq2seq.tile_batch(
+                encoder_state, multiplier=self.config.beam_width)
+        else:
+            initial_state = encoder_state
+
+        return cell, initial_state
