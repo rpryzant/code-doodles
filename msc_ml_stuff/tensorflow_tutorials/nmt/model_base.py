@@ -1,7 +1,36 @@
 import abc
+import time
 
 import tensorflow as tf
 from tensorflow.python.layers import core as layers_core
+
+
+
+def load_model(model, ckpt, session, name):
+  start_time = time.time()
+  model.saver.restore(session, ckpt)
+  session.run(tf.tables_initializer())
+  print "  loaded %s model parameters from %s, time %.2fs" % \
+      (name, ckpt, time.time() - start_time)
+  return model
+
+
+
+def create_or_load_model(model, model_dir, session, name):
+    latest_ckpt = tf.train.latest_checkpoint(model_dir)
+    if latest_ckpt:
+        model = load_model(model, latest_ckpt, session, name)
+    else:
+        start_time = time.time()
+        session.run(tf.global_variables_initializer())
+        session.run(tf.tables_initializer())
+        print "  created %s model with fresh parameters, time %.2fs" % \
+                        (name, time.time() - start_time)
+
+    global_step = model.global_step.eval(session=session)
+    return model, global_step        
+
+
 
 class BaseModel(object):
     """ sequence to sequence base class
@@ -37,15 +66,26 @@ class BaseModel(object):
         self.encoder_embeddings, self.decoder_embeddings = self.make_embeddings()
         # make graph
         self.loss, self.logits, self.sample_ids = self.build_graph()
+        self.preds = tf.argmax(self.logits, axis=2)
         if self.mode == 'inference':
             self.sample_words = reverse_tgt_vocab_table.lookup(
                 tf.to_int64(self.sample_ids))
+
+        # remember inputs + outputs
+        self.step_src = self.iterator.source
+        self.step_src_len = self.iterator.source_sequence_length
+        self.step_tgt = self.iterator.target_output
+        self.step_tgt_len = self.iterator.target_sequence_length
+
+
         # make training op
         self.train_op = self._make_training_op()
 
-        # tf boilerplate
+        # tf boilerplate stats
         self.summaries = tf.summary.merge_all()
-        self.saver = tf.trian.Saver(tf.global_variables())
+        self.saver = tf.train.Saver(tf.global_variables())
+        self.predict_count = tf.reduce_sum(
+            self.iterator.target_sequence_length)
 
 
     def make_embeddings(self):
@@ -82,8 +122,6 @@ class BaseModel(object):
 
 
     def _build_decoder(self, encoder_outputs, encoder_state):
-
-
         output_layer = layers_core.Dense(
             self.config.tgt_vocab_size, use_bias=False, name="out_projection")
 
@@ -92,7 +130,7 @@ class BaseModel(object):
 
         # train or eval (argmax)
         if self.mode != 'inference':
-            target_input = iterator.target_input
+            target_input = self.iterator.target_input
             target_embeddings = tf.nn.embedding_lookup(
                 self.decoder_embeddings, target_input)
             # argmax sampler
@@ -151,29 +189,25 @@ class BaseModel(object):
                 sample_ids = outputs.predicted_ids
             else:
                 logits = outputs.rnn_output  # already projected
-                sample_id = outputs.sample_id
+                sample_ids = outputs.sample_id
 
-            return logits, sample_ids
-
+        return logits, sample_ids
 
 
     def _compute_loss(self, logits):
         targets = self.iterator.target_output
+        seq_lens = self.iterator.target_sequence_length
         time_axis = 1
         max_time = targets.shape[time_axis].value or tf.shape(targets)[time_axis]
-
         crossent = tf.nn.sparse_softmax_cross_entropy_with_logits(
             labels=targets, logits=logits)
-        target_weights = tf.sequence_Mask(
-            self.iterator.target_sequence_length, max_time, dtype=logits.dtype)
-        loss = tf.reduce_sum(crossent * target_weights) / tf.to_float(self.batch_size)
-
+        mask = tf.sequence_mask(seq_lens, max_time, dtype=logits.dtype)
+        loss = tf.reduce_sum(crossent * mask) / tf.to_float(tf.reduce_sum(seq_lens))
         tf.summary.scalar("loss", loss)
-
         return loss
 
     def _make_training_op(self):
-        optimizer = tf.train.Adamoptimizer(self.config.learning_rate)
+        optimizer = tf.train.AdamOptimizer(self.config.learning_rate)
         params = tf.trainable_variables()
         gradients = tf.gradients(self.loss, params)
         clipped_gradients, gradient_norm = tf.clip_by_global_norm(
@@ -188,10 +222,19 @@ class BaseModel(object):
         return train_op
 
 
+    def train(self, sess, debug=False):
+        assert self.mode == "train"
+        ops = [self.train_op, self.loss, self.predict_count, self.global_step, self.summaries]
+        if debug:
+            ops += [self.step_src, self.step_src_len, self.step_tgt, self.step_tgt_len, self.preds]
+
+        return sess.run(ops)
+
+
     ###########################
     #  utility functions for subclasses
     ###########################
-    def _build_rnn_cell(self):
+    def _build_rnn_cell(self, layers=None):
         def _single_cell():
             cell = tf.contrib.rnn.BasicLSTMCell(
                 self.config.num_units, forget_bias=self.config.forget_bias)
@@ -202,13 +245,8 @@ class BaseModel(object):
 
             return cell
 
-        cell_list = [_single_cell() for _ in range(self.config.num_layers)]
-
-        if len(cell_list) == 1:
-            cell = cell_list[0]
-        else:
-            cell = tf.contrib.rnn.MultiRNNCell(cell_list)
-
+        cell_list = [_single_cell() for _ in range((layers or self.config.num_layers))]
+        cell = tf.contrib.rnn.MultiRNNCell(cell_list)
         return cell
 
 
@@ -217,19 +255,21 @@ class BaseModel(object):
         encoder_outputs, encoder_state = tf.nn.dynamic_rnn(
             cell,
             source_embedded,
+            dtype=tf.float32,
             sequence_length=self.iterator.source_sequence_length)
         return encoder_outputs, encoder_state
 
 
     def build_bidirectional_encoder(self, source_embedded):
-        fw_cell = self._build_rnn_cell()
-        bw_cell = self._build_rnn_cell()
+        fw_cell = self._build_rnn_cell(layers=self.config.num_layers / 2)
+        bw_cell = self._build_rnn_cell(layers=self.config.num_layers / 2)
         bi_output, bi_state = tf.nn.bidirectional_dynamic_rnn(
             fw_cell,
             bw_cell,
             source_embedded,
+            dtype=tf.float32,
             sequence_length=self.iterator.source_sequence_length)
-        return tf.concat(bi_outputs, -1), bi_state
+        return tf.concat(bi_output, -1), bi_state
 
 
 

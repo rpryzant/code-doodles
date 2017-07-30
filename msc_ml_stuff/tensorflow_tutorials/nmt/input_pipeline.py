@@ -78,9 +78,10 @@ def get_iterator(src_file, tgt_file, src_vocab_file, tgt_vocab_file, config, thr
         num_threads=threads, output_buffer_size=output_buffer_size)
 
     # add in word counts. subtract one from target to avoid counting sos/eos
+    #   TODO -- TROUBLESHOOT
     src_tgt_dataset = src_tgt_dataset.map(
         lambda src, tgt_in, tgt_out: (
-            src, tgt_in, tgt_out, tf.size(src), tf.size(tgt_in) - 1),
+            src, tgt_in, tgt_out, tf.size(src), tf.size(tgt_out)),
         num_threads=threads, output_buffer_size=output_buffer_size)
 
     # batch up
@@ -126,7 +127,7 @@ def get_iterator(src_file, tgt_file, src_vocab_file, tgt_vocab_file, config, thr
         target_input=tgt_input_ids,
         target_output=tgt_output_ids,
         source_sequence_length=src_seq_len,
-        target_sequence_length=tgt_seq_len)
+        target_sequence_length=tgt_seq_len), tgt_vocab_table
 
 
 

@@ -1,10 +1,15 @@
 import tensorflow as tf
 import os
+import numpy as np
 
+import model_base
 import models
 import input_pipeline
 import utils.vocab_utils as vocab_utils
+from collections import namedtuple
 
+class TrainModel(namedtuple("TrainModel", ('graph', 'model', 'iterator'))):
+    pass
 
 
 def create_train_model(model_creator, config):
@@ -17,27 +22,17 @@ def create_train_model(model_creator, config):
     graph = tf.Graph()
 
     with graph.as_default():
-        src_vocab_table, tgt_vocab_table = vocab_utils.create_vocab_tables(
-            src_vocab_file, tgt_vocab_file, config.share_vocab)
+        iterator, tgt_input_table = input_pipeline.get_iterator(
+            src_file, tgt_file, src_vocab_file, tgt_vocab_file, config)
 
-        src_dataset = tf.contrib.data.TextLineDataset(src_file)
-        tgt_dataset = tf.contrib.data.TextLineDataset(tgt_file)
+        model = model_creator(
+            config, iterator, "train", tgt_input_table)
 
-        iterator = input_pipeline.get_iterator(
-            src_file,
-            tgt_file,
-            src_vocab_file,
-            tgt_vocab_file,
-            config)
-        print iterator
-
+        return TrainModel(graph=graph, model=model, iterator=iterator)
 
 
 def train(config):
     out_dir = config.out_dir
-    num_train_steps = config.num_train_steps
-    steps_per_stats = config.steps_per_stats
-    steps_per_eval = config.steps_per_eval
 
     if not config.attention:
         model_creator = models.VanillaModel
@@ -45,3 +40,48 @@ def train(config):
         model_creator = models.AttentionModel
 
     train_model = create_train_model(model_creator, config)
+
+    train_sess = tf.Session(graph=train_model.graph)
+    with train_model.graph.as_default():
+        loaded_train_model, global_step = model_base.create_or_load_model(
+            train_model.model, out_dir, train_sess, "train")
+
+    summary_writer = tf.summary.FileWriter(
+        os.path.join(out_dir, "train_log"), train_model.graph)
+
+    train_sess.run(train_model.iterator.initializer)
+
+    while global_step < config.num_train_steps:
+        try:
+            step_result = loaded_train_model.train(train_sess, debug=True)
+            _, loss, predict_count, global_step, summary, src, src_len,  tgt, tgt_len, preds = step_result
+            print loss
+            print src
+            print src_len
+            print tgt
+            print tgt_len
+            print preds
+            print
+        except tf.errors.OutOfRangeError:
+            # epoch is done 
+            train_sess.run(train_model.iterator.initializer)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
