@@ -1,4 +1,10 @@
+import abc
 
+import tensorflow as tf
+from tensorflow.python.layers import core as layers_core
+
+
+from model_base import BaseModel
 
 
 
@@ -14,7 +20,7 @@ class VanillaModel(BaseModel):
             outputs, state = self.build_bidirectional_encoder(source_embedded)
             # alternate between fw/bw states 
             encoder_state = []
-            for layer in range(self.config.num_layers)
+            for layer in range(self.config.num_layers):
                 encoder_state.append(state[0][layer])
                 encoder_state.append(state[1][layer])
             encoder_state = tuple(encoder_state)

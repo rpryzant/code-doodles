@@ -1,4 +1,7 @@
+import abc
 
+import tensorflow as tf
+from tensorflow.python.layers import core as layers_core
 
 class BaseModel(object):
     """ sequence to sequence base class
@@ -6,19 +9,17 @@ class BaseModel(object):
     def __init__(self,
                  config, 
                  iterator, 
-                 src_vocab_table, 
-                 tgt_vocab_table,
                  mode,
+                 tgt_vocab_table,
                  reverse_tgt_vocab_table=None):
         if mode == "inference":
             assert reverse_tgt_vocab_table is not None
 
         self.iterator = iterator
         self.config = config
-        self.src_vocab_table = src_vocab_table
         self.tgt_vocab_table = tgt_vocab_table
 
-        self.batch_size = self.config.batch_size
+        self.batch_size = config.batch_size
         self.src_vocab_size = config.src_vocab_size
         self.tgt_vocab_size = config.tgt_vocab_size
         self.num_layers = config.num_layers
@@ -84,7 +85,7 @@ class BaseModel(object):
 
 
         output_layer = layers_core.Dense(
-            self.config.tgt_vocab_sizem use_bias=False, name="out_projection")
+            self.config.tgt_vocab_size, use_bias=False, name="out_projection")
 
         cell, initial_state = self._build_decoder_cell(
             encoder_outputs, encoder_state)
@@ -110,9 +111,9 @@ class BaseModel(object):
 
         # Inference (beam search)
         else:
-            tgt_sos_id = tf.cast(tf.tgt_vocab_table.lookup(tf.constant(self.config.sos)),
+            tgt_sos_id = tf.cast(self.tgt_vocab_table.lookup(tf.constant(self.config.sos)),
                                  tf.int32)
-            tgt_eos_id = tf.cast(tf.tgt_vocab_table.lookup(tf.constant(self.config.eos)),
+            tgt_eos_id = tf.cast(self.tgt_vocab_table.lookup(tf.constant(self.config.eos)),
                                  tf.int32)
             beam_width = self.config.beam_width
             length_penalty_weight = self.config.length_penalty_weight
