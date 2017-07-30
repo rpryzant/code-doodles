@@ -7,12 +7,13 @@ from tensorflow.python.layers import core as layers_core
 
 
 def load_model(model, ckpt, session, name):
-  start_time = time.time()
-  model.saver.restore(session, ckpt)
-  session.run(tf.tables_initializer())
-  print "  loaded %s model parameters from %s, time %.2fs" % \
-      (name, ckpt, time.time() - start_time)
-  return model
+
+    start_time = time.time()
+    model.saver.restore(session, ckpt)
+    session.run(tf.tables_initializer())
+    print "  loaded %s model parameters from %s, time %.2fs" % \
+        (name, ckpt, time.time() - start_time)
+    return model
 
 
 
@@ -230,6 +231,9 @@ class BaseModel(object):
 
         return sess.run(ops)
 
+    def eval(self, sess):
+        assert self.mode == "eval"
+        return sess.run([self.loss, self.predict_count])
 
     ###########################
     #  utility functions for subclasses

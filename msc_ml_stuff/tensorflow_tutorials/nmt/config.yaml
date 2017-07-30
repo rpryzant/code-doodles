@@ -3,7 +3,7 @@ src: "en"
 tgt: "vi"
 vocab_prefix: "vocab"
 train_prefix: "train_overfit"
-dev_prefix: "tst2012"
+eval_prefix: "tst2012"
 test_prefix: "tst2013"
 
 out_dir: "output"
@@ -22,7 +22,7 @@ share_vocab: False
 batch_size: 4
 num_train_steps: 12000
 steps_per_stats: 100
-steps_per_eval: 1000
+steps_per_eval: 10
 num_buckets: 1
 
 attention: False
