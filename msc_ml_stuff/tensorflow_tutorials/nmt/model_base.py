@@ -1,13 +1,46 @@
 import abc
 import time
+import os
+from collections import namedtuple
 
 import tensorflow as tf
 from tensorflow.python.layers import core as layers_core
 
+import input_pipeline
+
+# TODO lots of needlessly shared stuff bt eval/train and inference, seperate out or clean up
+class Model(namedtuple("TrainModel", ('graph', 'model', 'iterator', 'src_file', 'tgt_file', 'src_placeholder', 'batch_size_placeholder'))):
+    pass
+
+
+def build_model_graph(model_creator, config, mode="train"):
+    assert mode in ["train", "eval"]
+
+    if mode == "train":
+        src_file = os.path.join(config.data_dir, "%s.%s" % (config.train_prefix, config.src))
+        tgt_file = os.path.join(config.data_dir, "%s.%s" % (config.train_prefix, config.tgt))
+    elif mode == "eval":
+        src_file = os.path.join(config.data_dir, "%s.%s" % (config.eval_prefix, config.src))
+        tgt_file = os.path.join(config.data_dir, "%s.%s" % (config.eval_prefix, config.tgt))
+
+    src_vocab_file = os.path.join(config.data_dir, "%s.%s" % (config.vocab_prefix, config.src))
+    tgt_vocab_file = os.path.join(config.data_dir, "%s.%s" % (config.vocab_prefix, config.tgt))
+
+    graph = tf.Graph()
+
+    with graph.as_default():
+        iterator, tgt_vocab_table, reverse_tgt_vocab_table = \
+            input_pipeline.get_iterator(
+                src_file, tgt_file, src_vocab_file, tgt_vocab_file, config)
+
+        model = model_creator(config, iterator, mode, tgt_vocab_table, reverse_tgt_vocab_table)
+
+        return Model(graph=graph, model=model, iterator=iterator, src_file=src_file, tgt_file=tgt_file, src_placeholder=None, batch_size_placeholder=None)
+
+
 
 
 def load_model(model, ckpt, session, name):
-
     start_time = time.time()
     model.saver.restore(session, ckpt)
     session.run(tf.tables_initializer())
@@ -42,14 +75,18 @@ class BaseModel(object):
                  mode,
                  tgt_vocab_table,
                  reverse_tgt_vocab_table=None):
-        if mode == "inference":
+        assert mode in ['train', 'eval', 'test']
+
+        if mode == "test":
             assert reverse_tgt_vocab_table is not None
 
         self.iterator = iterator
+        # pull out batch size dynamically
+        self.batch_size = tf.size(self.iterator.source_sequence_length)
+
         self.config = config
         self.tgt_vocab_table = tgt_vocab_table
 
-        self.batch_size = config.batch_size
         self.src_vocab_size = config.src_vocab_size
         self.tgt_vocab_size = config.tgt_vocab_size
         self.num_layers = config.num_layers
@@ -67,10 +104,15 @@ class BaseModel(object):
         self.encoder_embeddings, self.decoder_embeddings = self.make_embeddings()
         # make graph
         self.loss, self.logits, self.sample_ids = self.build_graph()
-        self.preds = tf.argmax(self.logits, axis=2)
-        if self.mode == 'inference':
-            self.sample_words = reverse_tgt_vocab_table.lookup(
+
+        if self.mode == 'test':
+            self.preds = reverse_tgt_vocab_table.lookup(
                 tf.to_int64(self.sample_ids))
+        else:
+            self.preds = tf.argmax(self.logits, axis=2)
+            self.train_op = self._make_training_op()
+            self.predict_count = tf.reduce_sum(
+                self.iterator.target_sequence_length)
 
         # remember inputs + outputs
         self.step_src = self.iterator.source
@@ -78,15 +120,9 @@ class BaseModel(object):
         self.step_tgt = self.iterator.target_output
         self.step_tgt_len = self.iterator.target_sequence_length
 
-
-        # make training op
-        self.train_op = self._make_training_op()
-
         # tf boilerplate stats
         self.summaries = tf.summary.merge_all()
         self.saver = tf.train.Saver(tf.global_variables())
-        self.predict_count = tf.reduce_sum(
-            self.iterator.target_sequence_length)
 
 
     def make_embeddings(self):
@@ -108,8 +144,13 @@ class BaseModel(object):
             encoder_outputs, encoder_state = self._build_encoder()
         with tf.variable_scope("decoder"):
             logits, sample_ids = self._build_decoder(encoder_outputs, encoder_state)
-        with tf.variable_scope("loss"):
-            loss = self._compute_loss(logits)
+
+        if self.mode != "test":
+            with tf.variable_scope("loss"):
+                loss = self._compute_loss(logits)
+        else:
+            loss = tf.no_op()
+
         return loss, logits, sample_ids
 
     @abc.abstractmethod
@@ -130,7 +171,7 @@ class BaseModel(object):
             encoder_outputs, encoder_state)
 
         # train or eval (argmax)
-        if self.mode != 'inference':
+        if self.mode != 'test':
             target_input = self.iterator.target_input
             target_embeddings = tf.nn.embedding_lookup(
                 self.decoder_embeddings, target_input)
@@ -144,11 +185,14 @@ class BaseModel(object):
                 decoder, swap_memory=True)  # move tensors to cpu after computation, avoid memory issues on long seqs
 
             # applying projection all at once is faster than 
-            #    the per-timestep behavior in inference
-            logits = output_layer(outputs.rnn_output)
+            #    the per-timestep behavior in test
+            # apply a new scope here because tf.Decoder applies output_layer
+            #    within this scope by default
+            with tf.variable_scope("decoder"):
+                logits = output_layer(outputs.rnn_output)
             sample_ids = outputs.sample_id
 
-        # Inference (beam search)
+        # test (beam search)
         else:
             tgt_sos_id = tf.cast(self.tgt_vocab_table.lookup(tf.constant(self.config.sos)),
                                  tf.int32)
@@ -161,7 +205,7 @@ class BaseModel(object):
 
             # max decoding steps
             decoding_length_factor = 2.0
-            max_encoder_length = tf.reduce_max(iterator.source_sequence_length)
+            max_encoder_length = tf.reduce_max(self.iterator.source_sequence_length)
             maximum_iterations = tf.to_int32(tf.round(
                 tf.to_float(max_encoder_length) * decoding_length_factor))
 
@@ -176,7 +220,7 @@ class BaseModel(object):
                     output_layer=output_layer,
                     length_penalty_weight=length_penalty_weight)
             else:
-                # inference argmax sampler
+                # test argmax sampler
                 sampler = tf.contrib.seq2seq.GreedyEmbeddingHelper(
                     self.embedding_decoder, start_tokens, end_token)
                 decoder = tf.contrib.seq2seq.BasicDecoder(
@@ -231,9 +275,16 @@ class BaseModel(object):
 
         return sess.run(ops)
 
+
     def eval(self, sess):
         assert self.mode == "eval"
         return sess.run([self.loss, self.predict_count])
+
+
+    def test(self, sess):
+        assert self.mode == "test"
+        return sess.run([self.logits, self.preds])
+
 
     ###########################
     #  utility functions for subclasses

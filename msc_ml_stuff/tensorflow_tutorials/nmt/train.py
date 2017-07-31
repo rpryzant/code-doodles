@@ -7,46 +7,35 @@ import model_base
 import models
 import input_pipeline
 import utils.vocab_utils as vocab_utils
-from collections import namedtuple
-
-class Model(namedtuple("TrainModel", ('graph', 'model', 'iterator'))):
-    pass
+import inference
 
 
-def create_train_model(model_creator, config):
-    src_file = os.path.join(config.data_dir, "%s.%s" % (config.train_prefix, config.src))
-    tgt_file = os.path.join(config.data_dir, "%s.%s" % (config.train_prefix, config.tgt))
-    src_vocab_file = os.path.join(config.data_dir, "%s.%s" % (config.vocab_prefix, config.src))
-    tgt_vocab_file = os.path.join(config.data_dir, "%s.%s" % (config.vocab_prefix, config.tgt))
 
-    graph = tf.Graph()
-
-    with graph.as_default():
-        iterator, tgt_input_table = input_pipeline.get_iterator(
-            src_file, tgt_file, src_vocab_file, tgt_vocab_file, config)
-
-        model = model_creator(
-            config, iterator, "train", tgt_input_table)
-
-        return Model(graph=graph, model=model, iterator=iterator)
+def run_sample_decode(test_model, test_sess, out_dir, config, 
+                      summary_writer, src_file, tgt_file):
+    """ sample decoding on the test set """
+    with test_model.graph.as_default():
+        loaded_test_model, global_step = model_base.create_or_load_model(
+            test_model.model, out_dir, test_sess, "test")
 
 
-def create_eval_model(model_creator, config):
-    src_file = os.path.join(config.data_dir, "%s.%s" % (config.eval_prefix, config.src))
-    tgt_file = os.path.join(config.data_dir, "%s.%s" % (config.eval_prefix, config.tgt))
-    src_vocab_file = os.path.join(config.data_dir, "%s.%s" % (config.vocab_prefix, config.src))
-    tgt_vocab_file = os.path.join(config.data_dir, "%s.%s" % (config.vocab_prefix, config.tgt))
 
-    graph = tf.Graph()
+    test_sess.run(test_model.iterator.initializer,
+        feed_dict={
+            test_model.src_placeholder: src_file,
+            test_model.batch_size_placeholder: 4
+        })
 
-    with graph.as_default():
-        iterator, tgt_input_table = input_pipeline.get_iterator(
-            src_file, tgt_file, src_vocab_file, tgt_vocab_file, config)
+    _, nmt_outputs = loaded_test_model.test(test_sess)
 
-        model = model_creator(
-            config, iterator, "eval", tgt_input_table)
+    for x in  tgt_file:
+        print x
+    
+    for output in nmt_outputs:
+        print output.shape
+        print ' '.join(x for x in output[:,0])
+    quit()
 
-        return Model(graph=graph, model=model, iterator=iterator)
 
 
 def run_eval(eval_model, eval_sess, out_dir, config, summary_writer):
@@ -72,6 +61,9 @@ def run_eval(eval_model, eval_sess, out_dir, config, summary_writer):
     return total_loss / total_batches
 
 
+
+
+
 def train(config):
     out_dir = config.out_dir
 
@@ -80,11 +72,16 @@ def train(config):
     else:
         model_creator = models.AttentionModel
 
-    train_model = create_train_model(model_creator, config)
-    eval_model = create_eval_model(model_creator, config)
+    train_model = model_base.build_model_graph(model_creator, config, "train")
+    eval_model = model_base.build_model_graph(model_creator, config, "eval")
+    test_model = inference.build_inference_graph(model_creator, config)
+
+    test_src = inference.load_data(test_model.src_file)
+    test_tgt = inference.load_data(test_model.tgt_file)
 
     train_sess = tf.Session(graph=train_model.graph)
     eval_sess = tf.Session(graph=eval_model.graph)
+    test_sess = tf.Session(graph=test_model.graph)
 
     with train_model.graph.as_default():
         loaded_train_model, global_step = model_base.create_or_load_model(
@@ -110,6 +107,11 @@ def train(config):
             # epoch is done 
             train_sess.run(train_model.iterator.initializer)
 
+
+
+
+
+
         summary_writer.add_summary(summary, global_step)
         print global_step, config.steps_per_eval
         if global_step % config.steps_per_eval == 0:
@@ -118,6 +120,16 @@ def train(config):
                 train_sess,
                 os.path.join(out_dir, "model.ckpt"),
                 global_step=global_step)
+
+            # with train_model.graph.as_default():
+            #     variables_names = [v.name for v in tf.trainable_variables()]
+            #     values = train_sess.run(variables_names)
+            #     for k, v in zip(variables_names, values):
+            #         print k
+            # print
+
+            run_sample_decode(
+                test_model, test_sess, out_dir, config, summary_writer, test_src, test_tgt)
 
             eval_loss = run_eval(
                 eval_model, eval_sess, out_dir, config, summary_writer)

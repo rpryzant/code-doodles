@@ -31,7 +31,7 @@ class VanillaModel(BaseModel):
     def _build_decoder_cell(self, encoder_outputs, encoder_state):
         cell = self._build_rnn_cell()
 
-        if self.mode == "inference" and self.config.beam_width > 0:
+        if self.mode == "test" and self.config.beam_width > 0:
             initial_state = tf.contrib.seq2seq.tile_batch(
                 encoder_state, multiplier=self.config.beam_width)
         else:

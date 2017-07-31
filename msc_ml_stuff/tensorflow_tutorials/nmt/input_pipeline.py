@@ -16,13 +16,51 @@ class BatchedInput(namedtuple("BatchedInput",
 
 
 
+
+
+def get_test_iterator(src_dataset, src_vocab_table, batch_size, config):
+    src_eos_id = tf.cast(src_vocab_table.lookup(tf.constant(config.eos)), tf.int32)
+    src_dataset = src_dataset.map(lambda src: tf.string_split([src]).values)
+
+    src_dataset = src_dataset.map(lambda src: src[:config.src_max_len])
+
+    src_dataset = src_dataset.map(
+        lambda src: tf.cast(src_vocab_table.lookup(src), tf.int32))
+
+    if config.reverse_src:
+        src_dataset = src_dataset.map(lambda src: tf.reverse(src, axis=[0]))
+
+    src_dataset = src_dataset.map(lambda src: (src, tf.size(src)))
+
+    def batching_func(x):
+        return x.padded_batch(
+            config.batch_size,
+            padded_shapes=(tf.TensorShape([None]),
+                           tf.TensorShape([])),
+            padding_values=(src_eos_id,
+                            0))
+
+    batched_dataset = batching_func(src_dataset)
+    batched_iter = batched_dataset.make_initializable_iterator()
+    src_ids, src_seq_len = batched_iter.get_next()
+    return BatchedInput(
+        initializer=batched_iter.initializer,
+        source=src_ids,
+        target_input=None,
+        target_output=None,
+        source_sequence_length=src_seq_len,
+        target_sequence_length=None)
+
+
+
 def get_iterator(src_file, tgt_file, src_vocab_file, tgt_vocab_file, config, threads=4):
     output_buffer_size = config.batch_size * 1000
 
     src_dataset = tf.contrib.data.TextLineDataset(src_file)
     tgt_dataset = tf.contrib.data.TextLineDataset(tgt_file)
-    src_vocab_table, tgt_vocab_table = vocab_utils.create_vocab_tables(
-        src_vocab_file, tgt_vocab_file, config.share_vocab)
+    src_vocab_table, tgt_vocab_table, reverse_tgt_vocab_table = \
+        vocab_utils.create_vocab_tables(
+            src_vocab_file, tgt_vocab_file, config)
 
     src_eos_id = tf.cast(
         src_vocab_table.lookup(tf.constant(config.eos)),
@@ -122,12 +160,13 @@ def get_iterator(src_file, tgt_file, src_vocab_file, tgt_vocab_file, config, thr
         batched_iter.get_next()
     # return a NamedTuple of this stuff (as well as the initializer )
     return BatchedInput(
-        initializer=batched_iter.initializer,
-        source=src_ids,
-        target_input=tgt_input_ids,
-        target_output=tgt_output_ids,
-        source_sequence_length=src_seq_len,
-        target_sequence_length=tgt_seq_len), tgt_vocab_table
+            initializer=batched_iter.initializer,
+            source=src_ids,
+            target_input=tgt_input_ids,
+            target_output=tgt_output_ids,
+            source_sequence_length=src_seq_len,
+            target_sequence_length=tgt_seq_len), \
+        tgt_vocab_table, reverse_tgt_vocab_table
 
 
 

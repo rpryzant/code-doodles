@@ -5,7 +5,6 @@ from tensorflow.python.ops import lookup_ops
 
 UNK_ID = 0
 
-
 def check_vocab(vocab_file, out_dir, sos, eos, unk):
     """ verify vocab_file is proper """
     assert os.path.exists(vocab_file), "The vocab file %s does not exist" % vocab_file
@@ -18,13 +17,17 @@ def check_vocab(vocab_file, out_dir, sos, eos, unk):
     return vocab_file, len(lines)
 
 
-def create_vocab_tables(src_vocab_file, tgt_vocab_file, share_vocab):
+def create_vocab_tables(src_vocab_file, tgt_vocab_file, config):
     src_vocab_table = lookup_ops.index_table_from_file(
         src_vocab_file, default_value=UNK_ID)
-    if share_vocab:
+    if config.share_vocab:
         tgt_vocab_table = src_vocab_table
     else:
         tgt_vocab_table = lookup_ops.index_table_from_file(
             tgt_vocab_file, default_value=UNK_ID)
-    return src_vocab_table, tgt_vocab_table
+
+    reverse_tgt_vocab_table = lookup_ops.index_to_string_table_from_file(
+        tgt_vocab_file, default_value=config.unk)
+
+    return src_vocab_table, tgt_vocab_table, reverse_tgt_vocab_table
 
