@@ -41,5 +41,6 @@ for l in tqdm(lines, total=len(lines)):
     except:
         continue
 
-print counts
+for k, v in counts.iteritems():
+    print '%s,%d' % (k, v)
 
