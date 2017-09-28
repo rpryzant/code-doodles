@@ -23,3 +23,7 @@ print s(test, 5, 0, len(test) - 1)
 print s(test, 1, 0, len(test) - 1)
 print s(test, 10, 0, len(test) - 1)
             
+
+# THIS BREAKS IT!!!
+test2 = [8,19, 1,2,3,4,5]
+print s(test2, 19, 0, len(test) - 1)
