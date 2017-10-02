@@ -49,3 +49,29 @@ def containsTree(n1, n2):
     return contains(n1, n2)
 
 
+# VERSION 2!!!!!!!!
+
+## best: do the above but more cleanly (fully recursive)
+#    O(n1 * n2), might try matching t2 for every node of t1 (i fucked up the timing 
+
+def isSubtree(tree1, tree2):
+
+    def search(t1, t2):
+        if t1.v == t2.v:
+            if contains(t1, t2):
+                return True
+        return search(t1.l, t2) or search(t1.r, t2)
+
+    def contains(t1, t2):
+        if t1 is None and t2 is None:
+            return True
+        elif t1 is None or t2 is None:
+            return False
+        elif t1.v != t2.v:
+            return False
+        elif t1.v == t2.v:
+            return isSubtree(t1.l, t2.l) and isSubtree(t1.r, t2.r)
+
+        return False
+
+    return search(tree1, tree2)
