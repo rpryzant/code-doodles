@@ -11,26 +11,28 @@
 
 WATER = 0
 
+OFFSETS = [(1, 0),
+           (1, -1),
+           (1, 1),
+           (0, 1),
+           (0, -1),
+           (-1, 0),
+           (-1, 1),
+           (-1, -1)]
+
 
 def compute_pond_sizes(m):
+    def valid(r, c):
+        if r < 0 or c < 0:
+            return False
+        if r >= len(m) or c >= len(m[0]):
+            return False
+        return True
+
     def get_neighbors(r, c):
-        r_offsets = [0]
-        if r > 0:
-            r_offsets += [-1]
-        if r < len(m[0])-1:
-            r_offsets += [1]
-
-        c_offsets = [0]
-        if c > 0:
-            c_offsets += [-1]
-        if c < len(m)-1:
-            c_offsets += [1]
-
-        for roff in r_offsets:
-            for coff in c_offsets:
-                if roff == 0 and coff == 0:
-                    continue
-                yield roff, coff
+        for rof, cof in OFFSETS:
+            if valid(r+rof, c+cof):
+                yield rof, cof
 
     def get_size(r, c, visited):
         size = 0
@@ -42,7 +44,6 @@ def compute_pond_sizes(m):
         size += 1
 
         for r_off, c_off in get_neighbors(r, c):
-            if r == 1 and c == 2:
             if m[r+r_off][c+c_off] == WATER:  # north
                 size += get_size(r+r_off, c+c_off, visited)
 
