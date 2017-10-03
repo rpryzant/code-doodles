@@ -15,4 +15,23 @@ def smallest_diff(A, B):
     return min
 
 
+
+# 2017 version
+# not happy!!
+def smallestDiff(a, b):
+    a = sorted(a)
+    b = sorted(b)
+    ai, bi = 0, 0
+    min = None
+    while ai < len(a) and bi < len(b):
+        if not min or abs(a[ai] - b[bi]) < abs(min[0] - min[1]):
+            min = a[ai], b[bi]
+        if ai < len(a) and bi < len(b):
+            ai += 1
+        else: 
+            bi += 1
+    return min
+
+
+
 print smallest_diff([1,3,15,11,2],[23,127,235,19,8])
