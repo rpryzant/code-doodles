@@ -1,4 +1,7 @@
 
+* r tutorials
+  * http://www.bodowinter.com/tutorial/bw_LME_tutorial2.pdf
+  * http://ase.tufts.edu/gsc/gradresources/guidetomixedmodelsinr/mixed%20model%20guide.html
 
 * good description of what a confound is
   * https://www.youtube.com/watch?v=RtBY1zRaE_4&list=PL2yD6frXhFoYSO4MF3utWG_UUv2bhNZj0
