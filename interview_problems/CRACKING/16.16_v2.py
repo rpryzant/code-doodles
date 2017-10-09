@@ -18,6 +18,13 @@ for i in a
   O(n^2)
 
 
+
+1.5)
+for each element, find it's insertion point (behind itself for m, in front of itself for m)
+the first insertion point you find is the winner
+
+
+
 2) linear? multiple passes? 
      from front:   m is before the first decrease
      from back: n is before the first increase
