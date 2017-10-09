@@ -39,4 +39,8 @@ For example, let's say you recorded a bunch of men and women in various social s
 
 
 
+### More reading
+
+* http://www.bodowinter.com/tutorial/bw_LME_tutorial2.pdf
+* http://ase.tufts.edu/gsc/gradresources/guidetomixedmodelsinr/mixed%20model%20guide.html
 
