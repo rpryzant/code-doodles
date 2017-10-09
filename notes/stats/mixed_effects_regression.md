@@ -3,7 +3,7 @@
 
 ### Linear models, fixed effects
 
-Linear models express the relationship between some features `X_1, ..., X_n` and `Y` as a linear:
+Linear models express a linear relationship between some features `X_1, ..., X_n` and outcome `Y`:
 
 ```
 Y ~ X_1 + X_2 + ... + X_n  + error
