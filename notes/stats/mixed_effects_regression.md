@@ -28,7 +28,14 @@ Y ~ X_1 + X_2 + ... + X_n + (1 | random_effect_1) + ... + (1 | random_effect_k) 
 
 **A random effect is a confound which divides the data into subsets, and in each subset this variable acts on `Y` in a different way**. 
 
-For example, let's say you recorded a bunch of men and women in various social situations and are attempting to predict politeness from vocal pitch. `pitch` is certainly a fixed effect; variations in pitch are predictive of `politeness` regaurdless of interview subject. But there are also the confounding factors of `gender` and `situation`, which likely affects pitch regaurdless of politeness. So we introduce 
+For example, let's say you recorded a bunch of men and women in various social situations and are attempting to predict politeness from vocal pitch. `pitch` is certainly a fixed effect; variations in pitch are predictive of `politeness` regaurdless of interview subject. But there are also the confounding factors of `gender` and `situation`, which likely affects pitch regaurdless of politeness. So we introduce `gender` and `situation` as random effects, thereby assuming that these groups have different baseline vocal pitches and modeling accordingly. 
+
+
+### Mixed models in R
+
+
+
+### Mixed models in Python
 
 
 
