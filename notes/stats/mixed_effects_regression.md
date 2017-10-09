@@ -18,7 +18,7 @@ Before we leave linear models we observe that the covariates have a "fixed" effe
 
 ### Mixed models, random effects
 
-The goal of mixed effects regression is to give more structure to the `error` term in a principled way. We do so by adding in one or more categorical "random effect" variables to the model, and assuming a different "baseline" outcome for each level of these variables. In other words, we introduce a bunch of categorical variables, and give each level of these variables its own intercept.
+The goal of mixed effects regression is to give more structure to the `error` term in a principled way. We do so by adding in one or more categorical "random effect" variables to the model, and assuming a different "baseline" outcome and error term for each level of these variables. In other words, we introduce a bunch of categorical variables, and give each level of these variables its own intercept.
 
 
 ```
