@@ -30,7 +30,7 @@ Y ~ X_1 + X_2 + ... + X_n + (1 | random_effect_1) + ... + (1 | random_effect_k) 
 
 **A random effect is a confound which divides the data into subsets, and in each subset this variable acts on `Y` in a different way**. 
 
-For example, let's say you recorded a bunch of men and women in various social situations and are attempting to predict politeness from vocal pitch. `pitch` is certainly a fixed effect; variations in pitch are predictive of `politeness` regaurdless of interview subject. But there are also the confounding factors of `gender` and `situation`, which likely affects pitch but isn't really related to politeness (aka it doesn't have a fixed effect on politeness).
+For example, let's say you recorded a bunch of men and women and are attempting to predict politeness from vocal pitch. `pitch` is certainly a fixed effect; variations in pitch are predictive of `politeness` regaurdless of interview subject. But there are also the confounding factors of `gender` and `situation`, which likely affects pitch but isn't really related to politeness (aka it doesn't have a fixed effect on politeness).
 
 ```
               |
@@ -44,7 +44,11 @@ average pitch |
 
 ```
 
-So we introduce `gender` and `situation` as random effects, thereby assuming that these groups have different baseline vocal pitches and modeling accordingly. 
+So we introduce `gender` as a random effects, thereby assuming that these groups have different baseline vocal pitches and modeling these groups accordingly. 
+
+```
+politeness ~ pitch + (1 | gender) + error
+```
 
 
 ### Mixed models in R
