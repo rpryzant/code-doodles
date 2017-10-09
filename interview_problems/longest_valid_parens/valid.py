@@ -22,3 +22,4 @@ def longest_valid(s):
 print longest_valid("(")
 print longest_valid(")()")
 print longest_valid(")()())")
+print longest_valid("(()(()")
