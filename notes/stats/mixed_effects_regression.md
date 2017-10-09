@@ -23,6 +23,8 @@ The goal of mixed effects regression is to give more structure to the `error` te
 
 ```
 Y ~ X_1 + X_2 + ... + X_n + (1 | random_effect_1) + ... + (1 | random_effect_k) + error
+
+(this notation is coming from R)
 ```
 
 
