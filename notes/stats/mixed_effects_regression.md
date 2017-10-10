@@ -80,6 +80,11 @@ predict(model, myTestData)    # inference -- TODO FIGURE THIS OUT
 
 Note that `REML=False` tells the system to use a maximum likelihood objective when training.
 
+L1 Regularized implementations:
+* [[1]](https://cran.r-project.org/web/packages/lmmlasso/lmmlasso.pdf)
+* [[2]](https://cran.r-project.org/web/packages/glmmLasso/glmmLasso.pdf)
+
+
 ### Mixed models in Python
 
 
