@@ -56,8 +56,11 @@ politeness ~ pitch + (1 | gender) + error
 
 One advanced note for the 1337 h4Xors out there. 
 
-(TODO)
+Let's reconsider our `politeness ~ pitch + (1 | gender)` example. What if men not only have a lower baseline pitch, but also _raise their pitch less_ to indicate politeness? This means that the fixed effect `pitch` acts on the response `politeness` _differently_ under each treatment of the random effect. Seperate male/female intercepts won't cut it this time. We also need seperate slopes. Fortunately, we can do this with the following R-style notation:
 
+```
+politeness ~ pitch + (1 + pitch | gender) + error
+```
 
 ### Mixed models in R
 
@@ -76,6 +79,11 @@ predict(model, myTestData)    # inference -- TODO FIGURE THIS OUT
 ```
 
 Note that `REML=False` tells the system to use a maximum likelihood objective when training.
+
+L1 Regularized implementations:
+* [[1]](https://cran.r-project.org/web/packages/lmmlasso/lmmlasso.pdf)
+* [[2]](https://cran.r-project.org/web/packages/glmmLasso/glmmLasso.pdf)
+
 
 ### Mixed models in Python
 
