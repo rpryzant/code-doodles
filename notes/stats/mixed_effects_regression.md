@@ -18,6 +18,8 @@ Before we leave linear models we observe that the covariates have a "fixed" effe
 
 ### Mixed models, random effects
 
+#### Random intercepts
+
 The goal of mixed effects regression is to give more structure to the `error` term in a principled way. We do so by adding in one or more categorical "random effect" variables to the model, and assuming a different "baseline" outcome and error term for each level of these variables. In other words, we introduce a bunch of categorical variables, and give each level of these variables its own intercept.
 
 
@@ -50,13 +52,56 @@ So we introduce `gender` as a random effects, thereby assuming that these groups
 politeness ~ pitch + (1 | gender) + error
 ```
 
+#### Random slopes
+
+One advanced note for the 1337 h4Xors out there. 
+
 
 ### Mixed models in R
 
+Use package llmer 
+* [paper](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf)
+* [documentation](https://www.rdocumentation.org/packages/lme4/versions/1.1-13/topics/lmer).
 
+If you have variables `Y`, `X`, and `Confound` (categorical) in your dataframe `mydata`:
+```
+model = lmer(Y ~ X + (1 | Confound), data=mydata, REML=FALSE)
+
+summary(model)    # model summary
+coef(model)       # model coefficients
+
+predict(model, myTestData)    # inference -- TODO FIGURE THIS OUT
+```
+
+The `REML=False` tells the system to use a maximum likelihood objective when training.
 
 ### Mixed models in Python
 
+
+```
+from rpy2.robjects import r, pandas2ri
+import pandas as pd
+
+pandas2ri.activate()
+
+df = {
+  'A': [1, 2, 3],
+  'B': [4, 5, 6],
+  'C':[7,8,9]},
+  index=[1, 2, 3])}
+
+r_dataframe = pandas2ri.py2ri(df)
+rpy2.robjects.globalenv['dataset'] = r_dataframe
+
+result = rpy2.robjects.r('''
+      fit=lmer(A ~ A + B + (1 | C), data=dataset)
+''')
+rpy2.robjects.globalenv['result'] = result
+
+...
+TODO
+
+```
 
 
 ### More reading
