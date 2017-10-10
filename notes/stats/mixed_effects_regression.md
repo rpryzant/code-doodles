@@ -56,6 +56,8 @@ politeness ~ pitch + (1 | gender) + error
 
 One advanced note for the 1337 h4Xors out there. 
 
+(TODO)
+
 
 ### Mixed models in R
 
