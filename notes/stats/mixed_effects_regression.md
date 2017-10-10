@@ -75,7 +75,7 @@ coef(model)       # model coefficients
 predict(model, myTestData)    # inference -- TODO FIGURE THIS OUT
 ```
 
-The `REML=False` tells the system to use a maximum likelihood objective when training.
+Note that `REML=False` tells the system to use a maximum likelihood objective when training.
 
 ### Mixed models in Python
 
