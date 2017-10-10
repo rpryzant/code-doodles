@@ -14,7 +14,7 @@ This model divides the world into two parts.
 1) There's the stuff we understand in a systematic way. This is the `X_i's`, aka the features/covariates. Our data consists of this information.
 2) There's the stuff we don't understand. For the linear model above, we lump all of this into the random `error` term. 
 
-Before we leave linear models we observe that the covariates have a "fixed" effect on `Y`, that is, regaurdless of the example we pick, `X_1` will act on `Y` the same way. It's effect on the explanitory variable is **fixed**.
+Before we leave linear models we observe that the covariates have a "fixed" effect on `Y`, that is, regaurdless of the data point we pick, `X_1` will be affecting `Y` in the same way. It's effect on the explanitory variable is **fixed**.
 
 ### Mixed models, random effects
 
