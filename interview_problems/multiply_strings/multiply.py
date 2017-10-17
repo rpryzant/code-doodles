@@ -1,4 +1,4 @@
-
+# in notes
 
 # pre: b is digit < 10
 def multiply_by_digit(a, b):
