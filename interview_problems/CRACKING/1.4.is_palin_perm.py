@@ -1,5 +1,5 @@
 """
-
+in notes
 bf:
    iterate over all permutations, return true if one is palindrome
       O(n! * n)
