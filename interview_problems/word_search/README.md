@@ -18,3 +18,4 @@ word = `"SEE"`, -> returns true,
 
 word = `"ABCB"`, -> returns false.
 
+in notes
