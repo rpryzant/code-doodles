@@ -42,3 +42,18 @@
 * **kth smallest in bst**
   * get size of all subtrees, then branch left/right until #left + skipped sofar + 1 (for me) = target
   * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/k_th_smalest_bst/kthSmallest.py
+* **rm dups in-place**  -- rm dups by shrinking array (new len)
+  * sort, then move to `[i - repeats]` if not repeat, and `repeats += 1` if repeats
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/remove_duplicates/rem_dups.py
+* **implement sqrt**
+  * binary search
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/sqrt/sqrt.py
+* **validate number**
+  * regex up in this bitch
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/valid_number/valid.py
+* **swap adjacent nodes in linked list**
+  * pretty straightforward, but kick off iteration by tacking on additional root
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/swap_node_pairs/swapper.py
+* **swap bits**
+  * get even mask, then bring even bits right, then odd bits left
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/5.7.py
