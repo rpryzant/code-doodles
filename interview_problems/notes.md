@@ -39,4 +39,6 @@
 * **rank from stream** -- track rank of each number as it comes in from a stream
   * place into binary tree (have nodes track their rank), look up position in tree
   * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/10.10.py
-
+* **kth smallest in bst**
+  * get size of all subtrees, then branch left/right until #left + skipped sofar + 1 (for me) = target
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/k_th_smalest_bst/kthSmallest.py
