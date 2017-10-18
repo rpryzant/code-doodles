@@ -1,4 +1,4 @@
-
+# in notes
 
 
 # O(n log n) because each is `touched` once per node above it

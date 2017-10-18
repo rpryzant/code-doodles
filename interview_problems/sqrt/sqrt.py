@@ -1,4 +1,4 @@
-
+# in notes
 EPSILON = 1e-5
 
 

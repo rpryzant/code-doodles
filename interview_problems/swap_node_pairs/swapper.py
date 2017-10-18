@@ -1,3 +1,5 @@
+# in notes
+
 class ll:
     def __init__(self):
         self.root = None

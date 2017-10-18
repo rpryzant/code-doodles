@@ -26,6 +26,12 @@ class Node:
             self = self.next
         self.next = new
 
+    def get_tail(self):
+        if not self.next:
+            return self
+        else:
+            return self.next.get_tail()
+        
     def __str__(self):
         s = ''
         while self is not None:
