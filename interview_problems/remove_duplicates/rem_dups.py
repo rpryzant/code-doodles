@@ -1,4 +1,4 @@
-
+# in notes
 
 def remove_dups(a):
     repeats = 0
