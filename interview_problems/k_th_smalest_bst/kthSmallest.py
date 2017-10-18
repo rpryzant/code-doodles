@@ -1,5 +1,6 @@
 # i like my solution to this one! O(n) space but it's very readable/cool. plus my
 #  way of calculating tree sizes is 100
+# in notes
 
 def size(n, d):
     if n.left:
