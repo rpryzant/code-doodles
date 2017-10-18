@@ -1,5 +1,5 @@
 # TODO - make this work! I think my idea is correct...
-
+# in notes
 
 def gen_multiple():
     candidates = [(1,0,0), (0,1,0), (0,0,1), (1,1,0), (1,0,1), (1,1,1), (0,1,1),
