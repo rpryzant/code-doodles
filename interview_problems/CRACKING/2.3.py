@@ -1,4 +1,4 @@
-
+# in notes
 
 def delete(n):
     if n is None or n.next is None:
