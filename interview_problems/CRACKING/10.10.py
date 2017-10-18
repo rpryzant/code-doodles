@@ -1,3 +1,4 @@
+# in notes
 
 class RankNode:
     def __init__(self, d, left = None, right = None):
