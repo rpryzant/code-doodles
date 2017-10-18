@@ -57,3 +57,10 @@
 * **swap bits**
   * get even mask, then bring even bits right, then odd bits left
   * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/5.7.py
+* **all subsets**
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/8.4.py
+* **delete internal node**
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/2.3.py
+* **is balanced bst**
+  * in one function, both track height and make sure heights aren't off by more than 1
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/4.4.is_balanced_bst.py
