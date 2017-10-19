@@ -1,4 +1,4 @@
-
+# in notes
 
 
 def grey_code_seq(n):
