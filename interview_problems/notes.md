@@ -94,7 +94,9 @@
   * with parent ptrs, find depth, get difference, move lower up that diff, then up together
   * with no ptrs, depth-limited dfs for root and checking at same time (my thing is wrong?)
   * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/4.8.py
-
+* **smallest difference in two arrays**
+  * sort them, then iterate both
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/16.6.py
 
 
 
