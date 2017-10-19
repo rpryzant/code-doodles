@@ -40,3 +40,29 @@ class Node:
         return s
 
 
+    
+# line (y = mx + b)  
+class Line:
+      def __init__(self, m, b):
+            self.m = m
+            self.b = b
+            
+      @staticmethod
+      def gen_line(a, b):
+            if a.x == b.x:
+                  return None
+
+            m = float(b.y - a.y) / (b.x - a.x)
+            b = b.y - b.x * m
+            return Line(m, b)
+
+      def f(self, x):
+            return self.m * x + self.b
+
+      def search(self, pts):
+            return sum(1 if self.f(p.x) == p.y else 0 for p in pts)
+
+      def __str__(self):
+            return "y = %sx + %s" % (self.m, self.b)
+
+    

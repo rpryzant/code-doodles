@@ -1,3 +1,5 @@
+# in notes
+
 from collections import defaultdict
 
 class Point:

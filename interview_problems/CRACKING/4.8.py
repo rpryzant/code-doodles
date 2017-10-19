@@ -1,3 +1,5 @@
+# in notes
+
 import math
 
 def find_common_ancestor_with_parent_ptr(a, b):

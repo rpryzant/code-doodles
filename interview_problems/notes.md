@@ -64,3 +64,40 @@
 * **is balanced bst**
   * in one function, both track height and make sure heights aren't off by more than 1
   * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/4.4.is_balanced_bst.py
+* **add linked lists**
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/add_two_nums/adder.py
+* **grey code**
+  * convert to grey code: `(n ^ (n >> 1))`
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/grey_code/grey.py
+* **minimal bst** 
+  * convert sorted list to bst: kind of like binary search
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/4.2.py
+* **contains subtree**
+  * traverse the bigger, and check match tree whenever the "root" hits a match
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/4.10.find_subtree.py
+* **sparse binary search**
+  * if land on blank, widen until nearest nonblank and continue
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/10.5_v2.py
+* **find line that passes through most points**
+  * loop through all pairs of points, gen line, store dict counter for params
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/16.14.py
+* **palindrome partition** -- partiiton a string such that every substring is a palindrome
+  * dfs on possible paritioning points
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/palindrome_partitioning/partition.py
+* **divide and round** -- do division, then round to N digits
+  * do the division manually, then string formatting etc
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/round_division/div.py
+* **count steps**
+  * dfs + memoization
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/count_steps/count.py
+* **first common ancestor**
+  * with parent ptrs, find depth, get difference, move lower up that diff, then up together
+  * with no ptrs, depth-limited dfs for root and checking at same time (my thing is wrong?)
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/4.8.py
+* **smallest difference in two arrays**
+  * sort them, then iterate both
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/16.6.py
+
+
+
+

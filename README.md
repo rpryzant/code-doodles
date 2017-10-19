@@ -1,3 +1,9 @@
-# Description
 
-Doodling is a great habit for writers and artists. Programmers are no different! Inspired by [[this talk]](https://speakerdeck.com/jakevdp/in-defense-of-extreme-openness), I've decided to keep all the uncategorized "code doodles" I write in this repository.
+
+Doodling is a great habit for writers and artists. Programmers should be no different!
+
+```
+A programmer who subconsciously views himself as an artist will enjoy what he does and will do it better
+- Donald Knuth
+```
+

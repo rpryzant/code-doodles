@@ -1,4 +1,4 @@
-
+# in notes
 
 def smallest_diff(A, B):
     A = sorted(A)
