@@ -1,4 +1,17 @@
 
+def swap(a, p, q):
+    tmp = a[p]
+    a[p] = a[q]
+    a[q] = tmp
+
+def reverse(a, i, j):
+    # reverses i to j in a
+    if i == j or i > j: return
+    swap(a, i, j)
+    reverse(a, i+1, j-1)
+
+#########################################
+
 # binary tree
 class Node:
     def __init__(self, d):
