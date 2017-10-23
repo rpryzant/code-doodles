@@ -97,7 +97,12 @@
 * **smallest difference in two arrays**
   * sort them, then iterate both
   * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/16.6.py
-
+* **group anagram sort** -- sort an array of strings such that anagrams are neighbors
+  * in temp array, sort each word and then sort the temp. Save reordered indices and use that for output
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/10.2.py
+* **binary add without +**
+  * xor for result, then `(a & b) << 1` for carry, then keep applying carry with xor/shift until exausted
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/17.1.py
 
 
 
