@@ -69,7 +69,7 @@ def trapper(a):
     start_r = get_first_peak(adj_r)
 
     adj_l = get_peaks(a[::-1])[::-1]
-    start_l = get_first_peak(adj_l)
+    start_l = get_first_peak(adj_l[::-1])
 
     adj_both = zip(adj_r, adj_l)
 
