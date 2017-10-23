@@ -1,4 +1,4 @@
-
+# in notes
 
 def gen_spiral(M):
     m = len(M)
