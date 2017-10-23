@@ -1,3 +1,21 @@
+def __bfs(self, start, end):
+    q = Queue.Queue()
+    q.put( (start, [start]) )
+    visited = [start]
+    while not q.empty():
+        pt, cur_path = q.get()
+        if self.maze_array[pt[0]][pt[1]] == 'O':
+            return cur_path
+        neighbors = self.__get_neighbors(pt, visited)
+        for neighbor in neighbors:
+            cur_path.append(neighbor)
+            visited.append(neighbor)
+            q.put( (neighbor, cur_path[:]) )
+    return None
+
+
+##############################################################
+
 
 def swap(a, p, q):
     tmp = a[p]
