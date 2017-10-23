@@ -1,3 +1,37 @@
+
+def BiBFS(startA, startB, wList):
+    # note this is from word ladder thing
+    qA = Queue()
+    vA = {startA: 1}
+    qA.put(startA)
+
+    qB = Queue()
+    vB = {startB: 1}
+    qB.put(startB)
+
+
+    while not qA.empty() or qB.empty():
+
+        xA = qA.get()
+        for succ in wList.get_successors(xA):
+            if succ in vB:
+                return vA[xA] + vB[succ] - 1
+            vA[succ] = vA[xA] + 1
+            qA.put(succ)
+
+        xB = qB.get()
+        for succ in wList.get_successors(xB):
+            if succ in vA:
+                print xB, succ
+                return vB[xB] + vA[succ] - 1
+            vB[succ] = vB[xB] + 1
+            qB.put(succ)
+
+    return -1
+
+##############################################
+
+
 def __bfs(self, start, end):
     q = Queue.Queue()
     q.put( (start, [start]) )
