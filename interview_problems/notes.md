@@ -103,6 +103,13 @@
 * **binary add without +**
   * xor for result, then `(a & b) << 1` for carry, then keep applying carry with xor/shift until exausted
   * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/17.1.py
-
-
-
+* **inverse fn which recovers the arrays that could have generated binary tree**
+  * recursively get subarrays from right, left, then combine with all combinations of `[n.data] + [r l] OR [l r]`
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/CRACKING/4.9_v2.py
+* **flip regions**
+  * `O(n^2)`, if you hit a `0` do DFS that flips on the way down (remember OFFSETS constant)
+  * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/surrounded_regions/regions.py
+* **spiral matrix**
+  * generate elements from matrix in spiral order
+  * generate one ring at a time (so `for offset in range(num_rows/2)`m then `gen_ring(offset)`...) 
+  
