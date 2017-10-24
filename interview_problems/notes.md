@@ -1,5 +1,6 @@
 * **3 sum**
   * find triples where sum(triple) = 0 in a list (no dups, triples are uniques, list isn't sorted)
+  * either sort and binary search for third, or first pass stick in hashtable, 2nd pass for all i,j see if third is in hashtable
   * https://github.com/rpryzant/code-doodles/blob/master/interview_problems/3sum/3sum.py
 * **word search**
   * play word search with 2d matrix -- stick seeds in queue and keep working until exausted or done
