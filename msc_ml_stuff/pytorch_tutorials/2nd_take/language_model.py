@@ -72,6 +72,6 @@ for epoch in range(10):
 
 
 
-
+print model.embeddings.weight[word_to_ix['thy'], :]
 
 
