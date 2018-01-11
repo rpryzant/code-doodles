@@ -100,15 +100,15 @@ input_lang, output_lang, pairs = prepareData()
 
 class EncoderRNN(nn.Module):
     def __init__(self, input_size, hidden_size, n_layers=1):
-        super(EncodderRNN, self).__init__()
+        super(EncoderRNN, self).__init__()
         self.n_layers = n_layers
         self.hidden_size = hidden_size
 
         self.embedding = nn.Embedding(input_size, hidden_size)
-        self.lstm = nn.LSTMCell(hidden_size, hidden_size)
+        self.lstm = nn.GRU(hidden_size, hidden_size)
 
     def forward(self, input, hidden):
-        embedded = self.embedding(input).view(1, -1)
+        embedded = self.embedding(input).view(1, 1, -1)
         output = embedded # in case no layers
         for i in range(self.n_layers):
             output, hidden = self.lstm(output, hidden) # hidden layers shared??
@@ -125,7 +125,7 @@ class DecoderRNN(nn.Module):
         self.hidden_size = hidden_size
 
         self.embedding = nn.Embedding(output_size, hidden_size)
-        self.lsm = nn.LSTMCell(hidden_size, hidden_size)
+        self.lsm = nn.GRU(hidden_size, hidden_size)
         self.out = nn.Linear(hidden_size, output_size)
         self.softmax = nn.LogSoftmax(dim=1)
 
@@ -144,5 +144,148 @@ class DecoderRNN(nn.Module):
 
 # attentional decoder
 class AttnDecoderRNN(nn.Module):
-    # TODO
+    def __init__(self, hidden_size, output_size, n_layers=1, dropout_p=0.1, max_length=MAX_LENGTH):
+        super(AttnDecoderRNN, self).__init__()
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+        self.n_layers = n_layers
+        self.dropout_p = dropout_p
+        self.max_length = max_length
 
+        self.embedding = nn.Embedding(self.output_size, self.hidden_size)
+        self.attn = nn.Linear(self.hidden_size * 2, self.max_length)
+        self.attn_combine = nn.Linear(self.hidden_size * 2, self.hidden_size)
+        self.dropout = nn.Dropout(self.dropout_p)
+        self.lstm = nn.GRU(self.hidden_size, self.hidden_size)
+        self.out = nn.Linear(self.hidden_size, self.output_size)
+
+
+    def forward(self, input, hidden, encoder_outputs):
+        embedded = self.embedding(input).view(1, 1, -1)
+        embedded = self.dropout(embedded)
+
+        attn_weights = F.softmax(
+            self.attn(torch.cat((embedded[0], hidden[0]), 1)),
+            dim=1)
+        attn_applied = torch.bmm(attn_weights.unsqueeze(0),
+                                 encoder_outputs.unsqueeze(0))
+
+        output = torch.cat((embedded[0], attn_applied[0]), 1)
+        output = self.attn_combine(output).unsqueeze(0)
+
+        for i in range(self.n_layers):
+            output = F.relu(output)
+            output, hidden = self.lstm(output, hidden)
+
+
+        output = F.log_softmax(self.out(output[0]), dim=1)
+        return output, hidden, attn_weights
+
+    def initHidden(self): 
+        return Variable(torch.zeros(1, 1, self.hidden_size))
+
+
+
+###########  TRAINING
+
+
+def indexesFromSentence(lang, sentence):
+    return [lang.word2index[word] for word in sentence.split(' ')]
+
+
+def variableFromSentence(lang, sentence):
+    indexes = indexesFromSentence(lang, sentence)
+    indexes.append(EOS_token)
+    result = Variable(torch.LongTensor(indexes).view(-1, 1))
+    return result
+
+def variablesFromPair(pair):
+    input_variable = variableFromSentence(input_lang, pair[1])
+    target_variable = variableFromSentence(output_lang, pair[0])
+    return (input_variable, target_variable)
+
+teacher_forcing_ratio = 0.5
+
+def train(input_variable, target_variable, encoder, decoder,
+          encoder_optimizer, decoder_optimizer, criterion, max_length=MAX_LENGTH):
+
+
+    encoder_optimizer.zero_grad()
+    decoder_optimizer.zero_grad()
+
+    input_length = input_variable.size()[0]
+    target_length = target_variable.size()[0]
+
+    encoder_outputs = Variable(torch.zeros(max_length, encoder.hidden_size))
+
+    loss = 0
+
+    encoder_hidden = encoder.initHidden()
+    for ei in range(input_length):
+        encoder_output, encoder_hidden = encoder(
+            input_variable[ei], encoder_hidden)
+        encoder_outputs[ei] = encoder_output[0][0]
+
+    decoder_input = Variable(torch.LongTensor([[SOS_token]]))
+    decoder_hidden = encoder_hidden
+
+    use_teacher_forcing = True if random.random() < teacher_forcing_ratio else False
+
+
+    if use_teacher_forcing:
+        # Teacher forcing: Feed the target as the next input
+        for di in range(target_length):
+            decoder_output, decoder_hidden, decoder_attention = decoder(
+                decoder_input, decoder_hidden, encoder_outputs)
+            loss += criterion(decoder_output, target_variable[di])
+            decoder_input = target_variable[di]  # Teacher forcing
+    else:
+        # Without teacher forcing: use its own predictions as the next input
+        for di in range(target_length):
+
+            decoder_output, decoder_hidden, decoder_attention = decoder(
+                decoder_input, decoder_hidden, encoder_outputs)
+            topv, topi = decoder_output.data.topk(1)
+            ni = topi[0][0]
+
+            decoder_input = Variable(torch.LongTensor([[ni]]))
+
+            loss += criterion(decoder_output, target_variable[di])
+            if ni == EOS_token:
+                break
+    loss.backward()
+
+    encoder_optimizer.step()
+    decoder_optimizer.step()
+
+    return loss.data[0] / target_length
+
+
+
+hidden_size = 256
+encoder = EncoderRNN(input_lang.n_words, hidden_size)
+decoder = AttnDecoderRNN(hidden_size, output_lang.n_words, 1, dropout_p=0.1)
+
+learning_rate = 0.01
+encoder_optimizer = optim.SGD(encoder.parameters(), lr=learning_rate)
+decoder_optimizer = optim.SGD(decoder.parameters(), lr=learning_rate)
+
+criterion = nn.NLLLoss()
+
+n_iters = 75000
+training_pairs = []
+
+for i in range(n_iters):
+    training_pairs.append(variablesFromPair(random.choice(pairs)))
+
+
+for iter in range(n_iters):
+    pair = training_pairs[iter]
+    input_variable = pair[0]
+    target_variable = pair[1]
+
+    loss = train(input_variable, target_variable, encoder,
+                 decoder, encoder_optimizer, decoder_optimizer, criterion)
+    if iter % 100 == 0:
+        print iter
+        print loss
