@@ -88,9 +88,6 @@ weird cases:
 
 
 def find_grants_cap(grants, B):
-  if sum(grants) - B <= 0:
-    return max(grants)
-
   grants = sorted(grants)   
   partial_sum = 0
   i = 0
