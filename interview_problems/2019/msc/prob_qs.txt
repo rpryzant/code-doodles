@@ -1,0 +1,87 @@
+
+
+
+jar of marbles
+	4 total
+		3 R
+		1 W
+
+draw two marbles (with replacement)
+prob of same color twice?
+
+P(same color twice) 
+= P(R twice or W twice)
+= P(R twice) + P(W twice)
+= P(R) * P(R) + P(W) * P(W)
+=5/8
+
+
+
+
+==============================================================
+
+
+
+25% cleared both tests
+46% cleared first test
+
+percent of students that passed second test given they passed first?
+
+P(2nd and 1st) = .25
+P(1st) = 0.46
+
+p(A and B) = P(B | A) P(A)
+0.25 = X 0.46
+0.25 / 0.46 = 0.54
+
+
+
+==============================================================
+
+
+
+30% of twins are identical
+	same sex
+	pairs are 50/50 male female
+
+70% of twins are fraternal
+	.25 mm
+	.25 ff
+	.5  mf/fm
+
+you have twins, they are both girls. what is prob they are identical?
+
+P(identical | GG) = ?
+
+P(identical) = 0.3
+P(GG | identical) = 0.5
+
+P(GG) = P(gg identical or gg fraternal)
+      = P(gg | identical) P(identical) + P(gg | fraternal) P(fraternal)
+      = 0.5 * 0.3 + 0.25 * 0.7
+      = 0.325
+
+P(identical | GG) P(GG) =  P(GG | identical) P(identical)
+
+P(identical | GG) = ( P(GG | identical) P(identical) ) / P(GG)
+                  = ( 0.5 * 0.3 ) / 0.325
+                  = 0.46
+
+
+
+==================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
