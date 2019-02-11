@@ -1,0 +1,79 @@
+3 baskets
+4 balls
+	red
+	black
+	yellow
+	orange
+take 1 ball from each basket (randomly, independant draws). 
+what is prob of 2 reds?
+
+
+
+4^3 = 64 options
+	(4 for first, 4 for second, etc.)
+
+(3 choose 2) * (3 for remaining color) = 3 ways to have 2 reds * 3 options for remaining color = 9
+
+9 / 64 = 14%
+
+
+
+======================================
+
+
+bag has 1 r and 50 p coins
+withdraw 1 coin (without replacement)
+
+withdraw another coin. what is prob of r?
+
+p(r on second draw)
+	= p(r | first was r) + p(r | first was p)
+	= p(r | r) p(r)  + p(r | p) p(p)
+	= 0              + (r / (r + p - 1)) * ( p / (r + p) )
+
+
+
+=======================================
+
+candidate interviews for 3 posts
+3, 4, 2 competitors
+prob of at least one offer?
+
+p(1+ offers) = 1 - p(0 offers)
+
+p(0 offers) = p(no from first) * p(no from second) * p(no from third)
+            = (2 / 3) * (3 / 4) * (1 / 2)
+= 0.25
+p(1+ offers) = 1 - .25 = 0.75
+
+
+
+===========================================
+
+
+
+6 pairs of black socks (12 socklets) 
+6 pairs of white socks (12 socklets)
+prob of picking a pair with same color
+
+p(same color pick)
+= p(black pair or white pair)
+= p(black pair) + p(white pair)
+= p(black | black) p(black) + p(white | white) p(white)
+=    (11 / 23) * (1 / 2) + (11 / 23) * (1 / 2)
+
+11/23
+
+
+====================================
+
+p(pass) = 0.5
+p(good | pass) = 0.95
+p(good | fail) = 0.75
+p(pass | good) = ?
+
+p(pass | good) = p(good | pass) p(pass) / p(good)
+
+p(good) = p(good | pass) p(pass) + p(good | fail) p(fail)
+
+
