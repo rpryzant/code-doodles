@@ -1,0 +1,48 @@
+11. You call 2 UberX’s and 3 Lyfts. If the time that each takes to reach you is IID, what is the probability that all the Lyfts arrive first? What is the probability that all the UberX’s arrive first?
+
+5! orderings
+
+(2! 3!) / 5!
+
+
+
+19. You have a 0.1% chance of picking up a coin with both heads, and a 99.9% chance that you pick up a fair coin. You flip your coin and it comes up heads 10 times. What’s the chance that you picked up the fair coin, given the information that you observed?
+
+p(C) = 0.001
+p(F) = 0.999
+
+p(10x H|C) = 1.0
+p(10x T|C) = 0.0
+P(10x H|F) = 0.5^10
+P(10x T|F) = 0.5^10
+
+p(10x H) = sum_coin p(10x H | coin) p(coin)
+         = p(10x H | C) p(C) + p(10x H | F) p(F)
+	    = 0.001 + 0.5^10 * 0.999
+	       ~ 0.001
+
+p(F| 10x H) = P(10x H | F) P(F) / P(10x H)
+            = *(0.5 ^ 10) 0.999( / (0.001 + 0.5^10 * 0.999)
+	          ~ 0.5
+
+
+
+
+
+
+
+
+
+17. Let’s say we play a game where I keep flipping a coin until I get heads. If the first time I get heads is on the nth coin, then I pay you 2n-1 dollars. How much would you pay me to play this game?
+
+n = 1
+  0.5, 1 dollar
+n = 2
+  0.25, 3 dollars
+n = 3
+  0.125, 5 dollars
+
+E[n] = 1 - (sum_1^n 0.5 ^ (x + 1) * (2x - 1))
+
+
+less than 3 dollars (that’s where E[n] crosses 0)
