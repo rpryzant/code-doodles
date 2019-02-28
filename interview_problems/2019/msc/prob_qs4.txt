@@ -1,0 +1,43 @@
+
+
+
+E[X] = 1 (0.5) + 2 (0.5)^2 + 3 (0.5)^3 + 4 p(end on 4 throws)
+       	       	   	   = p(3 tail and head or tail)
+          		     	      	       = p(3 tail) p(head or tail)
+									= p(3 tail) (p(head) + p(tail) )
+ 									      	    	               = 0.5^3 * (0.5 + 0.5)
+												       	       	      	 = 0.5^3
+
+
+
+
+
+
+
+
+E[X] = 0 * 0.33 + (1 + E[X]) * 0.33 + (2 + E[X]) * 0.33
+E[X] = 0.33 + 0.33 E[X] + 0.66 + 0.33 E[X]
+E[X] = 1 + 2/3 E[X]
+3X = 3 + 2X
+X = 3
+
+
+
+
+Question: The probability of a car passing a certain intersection in a 20 minute windows is 0.9. What is the probability of a car passing the intersection in a 5 minute window? (Assuming a constant probability throughout)
+
+p(20) = 0.9
+p(20) = p(not 5)^3 p(5) (4 choose 1)
+p(20) = (1 - p(5))^3 p(5) 4
+0.9   = (1 - p(5))^3 p(5) 4
+0.9   = (1 - x)^3 * x * 4
+
+
+p(20) = 0.9
+p(20) = 1 - p(no 5’s)
+p(20) = 1 - (1 - p(5))^4
+0.9   = 1 - (1 - x)^4
+
+
+
+
