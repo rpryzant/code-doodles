@@ -1,0 +1,50 @@
+Question: In a country where everyone wants a boy, each family continues having babies till they have a boy. After some time, what is the proportion of boys to girls in the country? (Assuming probability of having a boy or a girl is the same)
+
+
+p(b) = 0.5
+p(g) = 0.5
+
+E[children] = 1 (0.5) + (1 + E[children]) 0.5
+            = 0.5 + 0.5 + E[children] 0.5
+0.5 X = 1
+X = 2
+boys:girls = 1:1
+
+
+
+
+
+Player A has a thirty-sided and Player B has a twenty-sided die. They both roll the dies and whoever gets the higher roll wins. If they roll the same amount Player B wins. What is the probability that Player B win?
+
+sum over marginals:
+p(b wins) = p(b >= a | a)
+          = p(b >= a) p(a)
+          = sum_ai(1>30) sum_bi(ai>20) p(bi) p(ai)
+
+	  counts:
+	      = ( (1 * 20) + (2 * 19) + … + (20 * 1) ) / (30 * 20)
+
+20 x 30 contingency table
+rows are A, cols are B
+
+W L x
+W W x
+
+
+A wins on
+last 10 columns (A > 20)
+everything above diagonal (half of remaining 20/20 - 10 (half of diagonal is consumed by 20*20/2 square)
+
+1 - that! 
+
+
+
+
+
+
+
+
+One hundred people line up to board an airplane. Each has a boarding pass with assigned seat. However, the first person to board has lost his boarding pass and takes a random seat. After that, each person takes the assigned seat if it is unoccupied, and one of unoccupied seats at random otherwise. What is the probability that the last person to board gets to sit in his assigned seat?
+
+
+
